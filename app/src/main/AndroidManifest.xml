@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nz.co.novozhilov.mikhail.haveaniceprice">
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="false">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="@string/filter_title_viewprices">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "prices-app://prices" -->
+                <data android:scheme="prices-app"
+                    android:host="prices" />
+            </intent-filter>
+            <intent-filter android:label="@string/filter_title_viewprice">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://novomic.co.nf/HaveANicePrice/" -->
+                <data android:scheme="http"
+                    android:host="novomic.co.nf"
+                    android:pathPrefix="/HaveANicePrice" />
+            </intent-filter>
         </activity>
+        <service
+            android:name=".services.HaveANicePriceService"/>
+        <receiver
+            android:name=".services.HaveANicePriceService$AlarmReceiver" android:enabled="true"/>
     </application>
 
 </manifest>

@@ -3,4 +3,29 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="separator">#E0E0E0</color>
+    <!-- material design color scheme yellow -->
+    <color name="material_blue_900">#177FF5</color>
+    <color name="material_blue_800">#25A8F9</color>
+    <color name="material_blue_700">#2DC0FB</color>
+    <color name="material_blue_600">#35D8FD</color>
+    <color name="material_blue_500">#3BEBFF</color>
+    <color name="material_blue_400">#58EEFF</color>
+    <color name="material_blue_300">#76F1FF</color>
+    <color name="material_blue_200">#9DF5FF</color>
+    <color name="material_blue_100">#C4F9FF</color>
+    <color name="material_blue_A200">#00FFFF</color>
+    <color name="material_blue_A700">#00D6FF</color>
+    <!-- material design color scheme amber -->
+    <color name="material_amber_900">#006FFF</color>
+    <color name="material_amber_800">#008FFF</color>
+    <color name="material_amber_700">#00A0FF</color>
+    <color name="material_amber_600">#00B3FF</color>
+    <!-- colors for status -->
+    <color name="text_red">#3D4eFF</color>
+    <color name="text_orange">#008FFF</color>
+    <color name="text_green">#6f8edf</color>
+    <!-- main menu grey color -->
+    <color name="icon_grey">#929493</color>
+    <color name="black">#1f1fed</color>
 </resources>

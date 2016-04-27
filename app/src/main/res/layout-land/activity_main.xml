@@ -5,17 +5,24 @@
     android:layout_height="fill_parent"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context="nz.co.novozhilov.mikhail.haveaniceprice.MainActivity"
     android:background="#ffffff">
 
     <fragment
-        android:name="nz.co.novozhilov.mikhail.haveaniceprice.fargments.PictureFragment"
+        android:name="nz.co.novozhilov.mikhail.haveaniceprice.fargments.MainMenuFragment"
         android:id="@+id/fr"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        tools:layout="@layout/picture_fragment"/>
+        android:layout_weight="3"
+        tools:layout="@layout/picture_fragment"
+        android:layout_gravity="center_vertical" />
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="5"
+        android:orientation="vertical">
     <fragment
         android:name="nz.co.novozhilov.mikhail.haveaniceprice.fargments.MainMenuFragment"
         android:id="@+id/button_fragment"
@@ -30,5 +37,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_dialog_email" />
+
+    </LinearLayout>
+
 
 </LinearLayout>
