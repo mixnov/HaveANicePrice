@@ -2,6 +2,7 @@ package nz.co.novozhilov.mikhail.haveaniceprice.fargments;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import nz.co.novozhilov.mikhail.haveaniceprice.R;
+import nz.co.novozhilov.mikhail.haveaniceprice.ShopsActivity;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -58,7 +60,14 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_main_shops:
                 // start java test menu fragment
-//                startFragment(new MenuJavaFragment());
+                //startFragment(ShopsListFragment.newInstance());
+                //startFragment(new ShopsListFragment());
+                Intent questionActivity = new Intent(v.getContext(), ShopsActivity.class);
+//                questionActivity.putExtra(QuestionActivity.EXTRA_TEST_TYPE, mTestType);
+//                int categoryId = mCategoryAdapter.getItem(position).getId();
+//                questionActivity.putExtra(QuestionActivity.EXTRA_CATEGORY, categoryId);
+                v.getContext().startActivity(questionActivity);
+
                 break;
             case R.id.btn_main_wish_list:
                 // open menu for a c test
