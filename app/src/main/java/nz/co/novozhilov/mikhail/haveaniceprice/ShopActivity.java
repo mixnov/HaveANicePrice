@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class ShopActivity extends AppCompatActivity {
 
-    private static final String TAG = ShopActivity.class.getName();
+    private static final String LOG_TAG = ShopActivity.class.getSimpleName();
 
     public static final String EXTRA_SHOP = "SHOP";
     private Shop shop;
@@ -59,8 +59,9 @@ public class ShopActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.setWebViewClient(new WebViewClient());        webView.loadUrl(shop.getUrl());
+        //webView.getSettings().setBuiltInZoomControls(true);
+        webView.setWebViewClient(new myWebViewClient());
+        webView.loadUrl("http://www.farmers.co.nz/beauty/perfume/women-s-perfumes");
 
 
     }
@@ -91,7 +92,84 @@ public class ShopActivity extends AppCompatActivity {
             super.onPageStarted(view, url, favicon);
             Snackbar.make(view, url, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
+            link.setText(url);
+            Parse parse = new Parse();
+            ArrayList<String> list = new ArrayList<>();
+            list.add(url);
+            list.add(".cms-productInfo");
+            list.add("title");
+            list.add(".std-price");
+            list.add(".new-price");
+            list.add(".old-price");
+            list.add(".save-price");
+            parse.execute(list);
+            ArrayList<String> result = null;
+            //ArrayList<String> nextResult = null;
+            try {
+                result = parse.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            };
+            if (!result.get(0).equals("0")) {
+                String res = "";
+                for(int i=0; i<result.size(); i++)
+                    res += result.get(i);
+                if (res.contains(".cms-productInfo")) {
+                    add.setEnabled(true);
+                }
+                else add.setEnabled(false);
+                title.setText(res);
 
+            } else {
+                add.setEnabled(false);
+            }
+
+        }
+    }
+
+    class Parse extends AsyncTask<ArrayList<String>, Void, ArrayList<String>>{
+
+        @Override
+        protected ArrayList<String> doInBackground(ArrayList<String>... params) {
+
+            ArrayList<String> list = new ArrayList<>();
+            Document document;
+            try {
+                String param = params[0].get(0);
+                document = Jsoup.connect(param).get();
+                for(int i=1; i < params[0].size(); i++){
+                    param = params[0].get(i);
+                    if (param.equals("title")) {
+                        list.add("title#" + document.title());
+                    } else {
+                        elements = document.select(param);
+                        String val = "";
+                        for(Element element : elements) {
+                            val = element.text();
+                            Log.v(LOG_TAG, val);
+                        }
+                        if (!val.isEmpty()) {
+                            list.add(param + "#");
+                            if (!param.equals(".cms-productInfo")){
+                                list.add(val);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (list.size()==0){
+                list.add("0");
+            }
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> strings) {
+            super.onPostExecute(strings);
         }
     }
 }
