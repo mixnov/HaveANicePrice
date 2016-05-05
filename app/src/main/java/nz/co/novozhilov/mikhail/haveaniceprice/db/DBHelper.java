@@ -1,26 +1,20 @@
 package nz.co.novozhilov.mikhail.haveaniceprice.db;
 
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.File;
-
-import android.os.Environment;
-
-import java.sql.SQLException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-
-import android.annotation.SuppressLint;
-import android.util.Log;
 
 /**
  * SQLite helper class for database
@@ -42,7 +36,7 @@ public final class DBHelper extends SQLiteOpenHelper {
     // Tables
     public static final String TABLE_PRODUCTS = "products";
     public static final String TABLE_SHOPS = "shops";
-    public static final String TABLE_STAT = "stat";
+    public static final String TABLE_STATISTICS = "statistics";
     public static final String TABLE_USER_PROFILE = "user_profile";
 
     // Common columns names
@@ -57,18 +51,22 @@ public final class DBHelper extends SQLiteOpenHelper {
     //  Shops table columns
     public static final String COLUMN_SH_TITLE = "title";
     public static final String COLUMN_SH_URL = "url";
-    public static final String COLUMN_SH_DIV_TITLE = "div_title";
-    public static final String COLUMN_SH_TITLE_IN = "title_in";
+    public static final String COLUMN_SH_IMG = "img";
+    public static final String COLUMN_SH_SPECIAL = "special";
     public static final String COLUMN_SH_STD_PRICE = "std_price";
     public static final String COLUMN_SH_DISC_PRICE = "disc_price";
     public static final String COLUMN_SH_OLD_PRICE = "old_price";
+    public static final String COLUMN_SH_SAVE_PRICE = "save_price";
 
-    // Stat table columns
+    // Statistics table columns
     public static final String COLUMN_ST_PRODUCT_ID = "product_id";
     public static final String COLUMN_ST_DATE = "date";
+    public static final String COLUMN_ST_SPECIAL = "special";
+    public static final String COLUMN_ST_PRICE = "price";
     public static final String COLUMN_ST_STD_PRICE = "std_price";
     public static final String COLUMN_ST_DISC_PRICE = "disc_price";
     public static final String COLUMN_ST_OLD_PRICE = "old_price";
+    public static final String COLUMN_ST_SAVE_PRICE = "save_price";
 
     // User profile table columns
     public static final String COLUMN_UP_NAME = "name";

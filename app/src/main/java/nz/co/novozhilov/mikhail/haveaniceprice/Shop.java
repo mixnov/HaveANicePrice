@@ -10,65 +10,110 @@ public class Shop implements Parcelable {
     private int id;
     private String title;
     private String url;
-    private String div_title;
-    private String title_in;
-    private Double std_price;
-    private Double disc_price;
-    private Double old_price;
+    private String img;
+    private String special;
+    private String std_price;
+    private String disc_price;
+    private String old_price;
+    private String save_price;
 
-    public Shop(int id, String title, String url, String div_title, String title_in,
-                Double std_price, Double disc_price, Double old_price) {
+    public Shop(int id, String title, String url, String img, String special,
+                String std_price, String disc_price, String old_price, String save_price) {
         this.id = id;
         this.title = title;
         this.url = url;
-        this.div_title = div_title;
-        this.title_in = title_in;
+        this.img = img;
+        this.special = special;
         this.std_price = std_price;
         this.disc_price = disc_price;
         this.old_price = old_price;
+        this.save_price = save_price;
+    }
+
+    public Shop(int id, String title, String url) {
+        this.id = id;
+        this.title = title;
+        this.url = url;
     }
 
     public Shop(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();
         this.url = in.readString();
-        this.div_title = in.readString();
-        this.title_in = in.readString();
-        this.std_price = in.readDouble();
-        this.disc_price = in.readDouble();
-        this.old_price = in.readDouble();
+        this.img = in.readString();
+        this.special = in.readString();
+        this.std_price = in.readString();
+        this.disc_price = in.readString();
+        this.old_price = in.readString();
+        this.save_price = in.readString();
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
-    public String getDivTitle() {
-        return div_title;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getTitleIn() {
-        return title_in;
+    public String getImg() {
+        return this.img;
     }
 
-    public Double getStdPrice() {
-        return std_price;
+    public void setImg(String img) {
+        this.img = img;
     }
 
-    public Double getDiscPrice() {
-        return disc_price;
+    public String getSpecial() {
+        return this.special;
     }
 
-    public Double getOldPrice() {
-        return old_price;
+    public void setSpecial(String special) {
+        this.special = special;
+    }
+
+    public String getStdPrice() {
+        return this.std_price;
+    }
+
+    public void setStdPrice(String std_price) {
+        this.std_price = std_price;
+    }
+
+    public String getOldPrice() {
+        return this.old_price;
+    }
+
+    public void setOldPrice(String old_price) {
+        this.old_price = old_price;
+    }
+
+    public String getDiscPrice() {
+        return this.disc_price;
+    }
+
+    public void setDiscPrice(String disc_price) {
+        this.disc_price = disc_price;
+    }
+
+    public String getSavePrice() {
+        return this.save_price;
+    }
+
+    public void setSavePrice(String save_price) {
+        this.save_price = save_price;
     }
 
     @Override
@@ -81,11 +126,11 @@ public class Shop implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.title);
         dest.writeString(this.url);
-        dest.writeString(this.div_title);
-        dest.writeString(this.title_in);
-        dest.writeDouble(this.std_price);
-        dest.writeDouble(this.disc_price);
-        dest.writeDouble(this.old_price);
+        dest.writeString(this.img);
+        dest.writeString(this.special);
+        dest.writeString(this.std_price);
+        dest.writeString(this.disc_price);
+        dest.writeString(this.old_price);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

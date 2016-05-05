@@ -80,9 +80,7 @@ public final class ShopsListFragment extends ListFragment{
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            mShops = ShopsDAO.getAllShops(getActivity());
-            //add default element - all shops
-            //mShops.add(0,new Shop(0, "ALL CATEGORIES", mTestType));
+            mShops = ShopsDAO.getShopsList(getActivity());
             return null;
         }
 

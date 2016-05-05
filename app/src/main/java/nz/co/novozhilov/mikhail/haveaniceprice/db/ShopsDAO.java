@@ -24,7 +24,7 @@ public class ShopsDAO {
      * @param context  - app context
      * @return list of questions
      */
-    public static ArrayList<Shop> getAllShops(Context context) {
+    public static ArrayList<Shop> getShopsList(Context context) {
         // open connection to the database
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -32,8 +32,8 @@ public class ShopsDAO {
         ArrayList<Shop> shops = new ArrayList<>();
         Cursor cursor = db.query(DBHelper.TABLE_SHOPS,
                 new String[]{DBHelper.COLUMN_ID, DBHelper.COLUMN_SH_TITLE, DBHelper.COLUMN_SH_URL,
-                        DBHelper.COLUMN_SH_DIV_TITLE, DBHelper.COLUMN_SH_TITLE_IN, DBHelper.COLUMN_SH_STD_PRICE,
-                        DBHelper.COLUMN_SH_DISC_PRICE, DBHelper.COLUMN_ST_OLD_PRICE},
+                        DBHelper.COLUMN_SH_IMG, DBHelper.COLUMN_SH_SPECIAL, DBHelper.COLUMN_SH_STD_PRICE,
+                        DBHelper.COLUMN_SH_DISC_PRICE, DBHelper.COLUMN_SH_OLD_PRICE, DBHelper.COLUMN_SH_SAVE_PRICE},
                 null, null, null, null, DBHelper.COLUMN_ID);
         Log.d("SQL", "EXECUTED!");
         // loop through the results
@@ -43,14 +43,15 @@ public class ShopsDAO {
                 int sId = cursor.getInt(0);
                 String sTitle = cursor.getString(1);
                 String sUrl = cursor.getString(2);
-                String sDivTitle = cursor.getString(3);
-                String sTitleIn = cursor.getString(4);
-                Double sStdPrice = cursor.getDouble(5);
-                Double sDiscPrice = cursor.getDouble(6);
-                Double sOldPrice = cursor.getDouble(7);
+                String sImg = cursor.getString(3);
+                String sSpecial = cursor.getString(4);
+                String sStdPrice = cursor.getString(5);
+                String sDiscPrice = cursor.getString(6);
+                String sOldPrice = cursor.getString(7);
+                String sSavePrice = cursor.getString(8);
 
                 // create question
-                Shop category = new Shop(sId, sTitle, sUrl, sDivTitle, sTitleIn, sStdPrice, sDiscPrice, sOldPrice);
+                Shop category = new Shop(sId, sTitle, sUrl, sImg, sSpecial, sStdPrice, sDiscPrice, sOldPrice, sSavePrice);
                 // add question to the list of questions
                 shops.add(category);
             } while (cursor.moveToNext());

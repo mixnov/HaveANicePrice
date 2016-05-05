@@ -7,12 +7,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
-import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,20 +22,22 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Mikhail on 29.04.2016.
  */
-public class ShopActivity extends AppCompatActivity {
+public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String LOG_TAG = ShopActivity.class.getSimpleName();
-
     public static final String EXTRA_SHOP = "SHOP";
     private Shop shop;
     private WebView webView;
     private TextView link, title;
     private Button add;
+    private Product product = null;
+    private Statistics statistics = null;
 
     public Elements elements;
 
@@ -44,6 +48,7 @@ public class ShopActivity extends AppCompatActivity {
 
         link = (TextView) findViewById(R.id.txtLink);
         add = (Button) findViewById(R.id.btnAdd);
+        add.setOnClickListener(this);
         title = (TextView) findViewById(R.id.txtTitle);
         add.setEnabled(false);
         Bundle extras = this.getIntent().getExtras();
@@ -75,9 +80,13 @@ public class ShopActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    public void onClick(View v) {
+//        ProductsDAO.addProduct();
+    }
+
     private class myWebViewClient extends WebViewClient {
-        public boolean shouldOverrideUrlLoading(WebView view, String url)
-        {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.startsWith("mailto:") || url.startsWith("tel:")) {
                 Intent intent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse(url));
@@ -95,31 +104,32 @@ public class ShopActivity extends AppCompatActivity {
             link.setText(url);
             Parse parse = new Parse();
             ArrayList<String> list = new ArrayList<>();
-            list.add(url);
-            list.add(".cms-productInfo");
+            list.add(shop.getUrl());
+            list.add(shop.getTitle());
             list.add("title");
-            list.add(".std-price");
-            list.add(".new-price");
-            list.add(".old-price");
-            list.add(".save-price");
+            list.add(shop.getImg());
+            list.add(shop.getSpecial());
+            list.add(shop.getStdPrice());
+            list.add(shop.getDiscPrice());
+            list.add(shop.getOldPrice());
+            list.add(shop.getSavePrice());
             parse.execute(list);
-            ArrayList<String> result = null;
-            //ArrayList<String> nextResult = null;
+            HashMap<String, String> result = new HashMap<>();
             try {
                 result = parse.get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
-            };
+            }
+
             if (!result.get(0).equals("0")) {
                 String res = "";
-                for(int i=0; i<result.size(); i++)
+                for (int i = 0; i < result.size(); i++)
                     res += result.get(i);
-                if (res.contains(".cms-productInfo")) {
+                if (res.contains(shop.getTitle())) {
                     add.setEnabled(true);
-                }
-                else add.setEnabled(false);
+                } else add.setEnabled(false);
                 title.setText(res);
 
             } else {
@@ -129,47 +139,69 @@ public class ShopActivity extends AppCompatActivity {
         }
     }
 
-    class Parse extends AsyncTask<ArrayList<String>, Void, ArrayList<String>>{
+    class Parse extends AsyncTask<ArrayList<String>, Void, HashMap<String, String>> {
+
 
         @Override
-        protected ArrayList<String> doInBackground(ArrayList<String>... params) {
+        protected HashMap<String, String> doInBackground(ArrayList<String>... params) {
 
-            ArrayList<String> list = new ArrayList<>();
+            product = null;
+            statistics = null;
+
+            HashMap hm = new HashMap();
             Document document;
             try {
+
                 String param = params[0].get(0);
                 document = Jsoup.connect(param).get();
-                for(int i=1; i < params[0].size(); i++){
+                for (int i = 1; i < params[0].size(); i++) {
                     param = params[0].get(i);
                     if (param.equals("title")) {
-                        list.add("title#" + document.title());
+                        hm.put(param, document.title());
+                    } else if (param.equals(shop.getTitle())) {
+                        elements = document.select(param);
+                        String val = "";
+                        for (Element element : elements) {
+                            val = element.text();
+                        }
+                        if (val.isEmpty()) break;
                     } else {
                         elements = document.select(param);
                         String val = "";
-                        for(Element element : elements) {
+                        for (Element element : elements) {
                             val = element.text();
                             Log.v(LOG_TAG, val);
-                        }
-                        if (!val.isEmpty()) {
-                            list.add(param + "#");
-                            if (!param.equals(".cms-productInfo")){
-                                list.add(val);
+                            if (!val.isEmpty()) {
+                                String str = "";
+                                str = str.concat(val);
+                                hm.put(param, str);
+                                Log.v(LOG_TAG, str);
                             }
                         }
+                        if (!val.isEmpty()) {
+                            String str = "";
+                            str = str.concat(val);
+                            hm.put(param, str);
+                            Log.v(LOG_TAG, str);
+                        } else if (param.equals(shop.getTitle())) {
+                            break;
+                        }
+
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (list.size()==0){
-                list.add("0");
+            if (hm.size() == 0) {
+                hm.put("0", "0");
             }
-            return list;
+            return hm;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> strings) {
-            super.onPostExecute(strings);
+        protected void onPostExecute(HashMap<String, String> stringStringHashMap) {
+
+            super.onPostExecute(stringStringHashMap);
         }
     }
 }

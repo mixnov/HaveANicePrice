@@ -10,6 +10,8 @@ import nz.co.novozhilov.mikhail.haveaniceprice.fargments.MainMenuFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String LOG_TAG = MainActivity.class.getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
