@@ -7,14 +7,17 @@ import android.os.Parcelable;
  * Created by Mikhail on 03.05.2016.
  */
 public class Product implements Parcelable {
-    private int id;
+    private int _id;
     private int shop_id;
     private String url;
     private String title;
     private String img_url;
 
-    public Product(int id, int shop_id, String url, String title, String img_url) {
-        this.id = id;
+    public Product() {
+    }
+
+    public Product(int _id, int shop_id, String url, String title, String img_url) {
+        this._id = _id;
         this.shop_id = shop_id;
         this.url = url;
         this.title = title;
@@ -22,7 +25,7 @@ public class Product implements Parcelable {
     }
 
     public Product(Parcel in) {
-        this.id = in.readInt();
+        this._id = in.readInt();
         this.shop_id = in.readInt();
         this.url = in.readString();
         this.title = in.readString();
@@ -30,11 +33,11 @@ public class Product implements Parcelable {
     }
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public int getShopId() {
@@ -76,7 +79,7 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeInt(this._id);
         dest.writeInt(this.shop_id);
         dest.writeString(this.url);
         dest.writeString(this.title);

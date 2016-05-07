@@ -49,9 +49,9 @@ public final class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_P_URL = "url";
 
     //  Shops table columns
-    public static final String COLUMN_SH_TITLE = "title";
+    public static final String COLUMN_SH_TITLE = "_title";
     public static final String COLUMN_SH_URL = "url";
-    public static final String COLUMN_SH_IMG = "img";
+    public static final String COLUMN_SH_IMG_URL = "img_url";
     public static final String COLUMN_SH_SPECIAL = "special";
     public static final String COLUMN_SH_STD_PRICE = "std_price";
     public static final String COLUMN_SH_DISC_PRICE = "disc_price";
@@ -94,7 +94,7 @@ public final class DBHelper extends SQLiteOpenHelper {
      * @return database opened for writing and reading
      */
     public boolean openDataBase() {
-        //createDB();
+        createDB();
         if (!checkDataBase()) {
             createDB();
         }

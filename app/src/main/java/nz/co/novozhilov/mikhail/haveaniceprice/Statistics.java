@@ -7,19 +7,22 @@ import android.os.Parcelable;
  * Created by Mikhail on 05.05.2016.
  */
 public class Statistics implements Parcelable {
-    private int id;
+    private int _id;
     private String shopTitle;
     private String productTitle;
     private long dateTime;
-    private boolean special;
+    private String special;
     private double std_price;
     private double disc_price;
     private double old_price;
     private double save_price;
 
-    public Statistics(int id, String shopTitle, String productTitle, long dateTime, boolean special,
+    public Statistics() {
+    }
+
+    public Statistics(int _id, String shopTitle, String productTitle, long dateTime, String special,
                 double std_price, double disc_price, double old_price, double save_price) {
-        this.id = id;
+        this._id = _id;
         this.shopTitle = shopTitle;
         this.productTitle = productTitle;
         this.dateTime = dateTime;
@@ -31,11 +34,11 @@ public class Statistics implements Parcelable {
     }
 
     public Statistics(Parcel in) {
-        this.id = in.readInt();
+        this._id = in.readInt();
         this.shopTitle = in.readString();
         this.productTitle = in.readString();
         this.dateTime = in.readLong();
-        this.special = (in.readByte() == 1) ? true : false;
+        this.special = in.readString();
         this.std_price = in.readDouble();
         this.disc_price = in.readDouble();
         this.old_price = in.readDouble();
@@ -43,7 +46,11 @@ public class Statistics implements Parcelable {
     }
 
     public int getId() {
-        return this.id;
+        return this._id;
+    }
+
+    public void setId(int _id) {
+        this._id = _id;
     }
 
     public String getShopTitle() {
@@ -70,11 +77,11 @@ public class Statistics implements Parcelable {
         this.dateTime = dateTime;
     }
 
-    public boolean getSpecial() {
+    public String getSpecial() {
         return this.special;
     }
 
-    public void setSpecial(boolean special) {
+    public void setSpecial(String special) {
         this.special = special;
     }
 
@@ -117,11 +124,11 @@ public class Statistics implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeInt(this._id);
         dest.writeString(this.shopTitle);
         dest.writeString(this.productTitle);
         dest.writeLong(this.dateTime);
-        dest.writeByte((byte) ((this.special) ? 1 : 0));
+        dest.writeString(this.special);
         dest.writeDouble(this.std_price);
         dest.writeDouble(this.disc_price);
         dest.writeDouble(this.old_price);

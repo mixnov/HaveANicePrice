@@ -7,22 +7,22 @@ import android.os.Parcelable;
  * Created by Mikhail on 28.04.2016.
  */
 public class Shop implements Parcelable {
-    private int id;
-    private String title;
+    private int _id;
     private String url;
-    private String img;
+    private String title;
+    private String img_url;
     private String special;
     private String std_price;
     private String disc_price;
     private String old_price;
     private String save_price;
 
-    public Shop(int id, String title, String url, String img, String special,
+    public Shop(int _id, String url, String title, String img_url, String special,
                 String std_price, String disc_price, String old_price, String save_price) {
-        this.id = id;
-        this.title = title;
+        this._id = _id;
         this.url = url;
-        this.img = img;
+        this.title = title;
+        this.img_url = img_url;
         this.special = special;
         this.std_price = std_price;
         this.disc_price = disc_price;
@@ -30,17 +30,17 @@ public class Shop implements Parcelable {
         this.save_price = save_price;
     }
 
-    public Shop(int id, String title, String url) {
-        this.id = id;
-        this.title = title;
+    public Shop(int _id, String url, String title) {
+        this._id = _id;
         this.url = url;
+        this.title = title;
     }
 
     public Shop(Parcel in) {
-        this.id = in.readInt();
-        this.title = in.readString();
+        this._id = in.readInt();
         this.url = in.readString();
-        this.img = in.readString();
+        this.title = in.readString();
+        this.img_url = in.readString();
         this.special = in.readString();
         this.std_price = in.readString();
         this.disc_price = in.readString();
@@ -49,15 +49,11 @@ public class Shop implements Parcelable {
     }
 
     public int getId() {
-        return this.id;
+        return this._id;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void getId(int _id) {
+        this._id = _id;
     }
 
     public String getUrl() {
@@ -68,12 +64,20 @@ public class Shop implements Parcelable {
         this.url = url;
     }
 
-    public String getImg() {
-        return this.img;
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getImgUrl() {
+        return this.img_url;
+    }
+
+    public void setImgUrl(String img_url) {
+        this.img_url = img_url;
     }
 
     public String getSpecial() {
@@ -123,14 +127,15 @@ public class Shop implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.title);
+        dest.writeInt(this._id);
         dest.writeString(this.url);
-        dest.writeString(this.img);
+        dest.writeString(this.title);
+        dest.writeString(this.img_url);
         dest.writeString(this.special);
         dest.writeString(this.std_price);
         dest.writeString(this.disc_price);
         dest.writeString(this.old_price);
+        dest.writeString(this.save_price);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
