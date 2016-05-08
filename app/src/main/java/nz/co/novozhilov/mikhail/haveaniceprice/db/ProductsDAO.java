@@ -20,17 +20,17 @@ public class ProductsDAO {
     /**
      * Generate sql query string
      *
-     * @param shopFilter - filter by shop
+     * @param filter - filter by shop
      * @return string of query
      */
-    static String getProductsQuery(String shopFilter) {
+    static String getProductsQuery(String filter) {
         return "SELECT " + DBHelper.COLUMN_ID +         //  0
                 ", " + DBHelper.COLUMN_ID +             //  1
                 ", " + DBHelper.COLUMN_P_URL +          //  2
                 ", " + DBHelper.COLUMN_P_TITLE +        //  3
                 ", " + DBHelper.COLUMN_P_IMG_URL +      //  4
                 " FROM " + DBHelper.TABLE_PRODUCTS +
-                shopFilter + " ORDER BY " + DBHelper.COLUMN_P_TITLE;
+                filter + " ORDER BY " + DBHelper.COLUMN_P_TITLE;
     }
 
     static ArrayList<Product> getProducts(Context context, String whereClause) {
@@ -78,22 +78,26 @@ public class ProductsDAO {
      * get all products
      *
      * @param context  - app context
-     * @return list of questions
+     * @return list of products
      */
     static ArrayList<Product> getAllProducts(Context context) {
         return getProducts(context, "");
     }
 
     /**
-     * get questions by category
+     * get product by url
      *
      * @param context  - app context
-     * @param testType - car test, motorbike test, etc.
-     * @return list of questions
+     * @param url - url of the product.
+     * @return id
      */
-//    static ArrayList<Product> getProductsByCategory(Context context, int categoryId) {
-//
-//    }
+    public static int getProductsByUrl(Context context, String url) {
+        String whereClause = " WHERE " + DBHelper.COLUMN_P_URL + " = '" + url + "'";
+        ArrayList<Product> products = getProducts(context, whereClause);
+        int count = products.size();
+
+        return count;
+    }
 
     /**
      * get all questions with wrong answer
@@ -112,24 +116,26 @@ public class ProductsDAO {
     /**
      * Add product to the table
      *
-     * @param shopID - shop's id in the database
+     * @param product - product for writing to DB
      */
-    static void addProduct(Context context, int shopID, String url, String title, String imgUrl) {
+    public static long addProduct(Context context, Product product) {
         DBHelper dbHandler = new DBHelper(context);
         SQLiteDatabase db = dbHandler.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(DBHelper.COLUMN_P_SHOP_ID, shopID);
-        values.put(DBHelper.COLUMN_P_URL, url);
-        values.put(DBHelper.COLUMN_P_TITLE, title);
-        values.put(DBHelper.COLUMN_P_IMG_URL, imgUrl);
+        values.put(DBHelper.COLUMN_P_SHOP_ID, product.getShopId());
+        values.put(DBHelper.COLUMN_P_URL, product.getUrl());
+        values.put(DBHelper.COLUMN_P_TITLE, product.getTitle());
+        values.put(DBHelper.COLUMN_P_IMG_URL, product.getImgUrl());
 
         //insert into db (if id is already there - ignore)
-        db.insertWithOnConflict(DBHelper.TABLE_PRODUCTS, null, values, SQLiteDatabase.CONFLICT_ABORT);
+        long id = db.insertWithOnConflict(DBHelper.TABLE_PRODUCTS, null, values, SQLiteDatabase.CONFLICT_ABORT);
 
         //close connection
         db.close();
         dbHandler.close();
+
+        return id;
     }
 
 

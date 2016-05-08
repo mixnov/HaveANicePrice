@@ -7,56 +7,81 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="#ffffff">
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="31dp"
+            android:layout_height="match_parent"
+            android:text="+" />
+
+        <LinearLayout
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            android:paddingRight="5dp">
+
+            <TextView
+                android:id="@+id/txtPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/txtStdPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/txtVDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingLeft="5dp">
 
             <TextView
-                android:id="@+id/txtTitle"
-                android:layout_width="300dp"
+                android:id="@+id/txtLink"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title"
+                android:layout_gravity="top"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/edtLink"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ffffff"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtPrice"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:gravity="right" />
-
-                <Button
-                    android:id="@+id/btnAdd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ADD" />
-            </LinearLayout>
+                android:enabled="false"
+                android:focusable="false"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
-    </ScrollView>
+
+    </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/txtLink"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <WebView
-            android:id="@+id/webView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|top"
-            android:background="#ffffff" />
+    <WebView
+        android:id="@+id/webView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal|top"
+        android:background="#ffffff" />
 </LinearLayout>

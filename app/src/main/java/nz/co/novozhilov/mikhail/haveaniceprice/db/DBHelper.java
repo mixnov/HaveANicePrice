@@ -94,7 +94,7 @@ public final class DBHelper extends SQLiteOpenHelper {
      * @return database opened for writing and reading
      */
     public boolean openDataBase() {
-        createDB();
+//        createDB();
         if (!checkDataBase()) {
             createDB();
         }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -24,20 +25,21 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
+
+import nz.co.novozhilov.mikhail.haveaniceprice.db.ProductsDAO;
 
 /**
  * Created by Mikhail on 29.04.2016.
  */
-public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
+public class ShopActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = ShopActivity.class.getSimpleName();
     public static final String EXTRA_SHOP = "SHOP";
-    private String url;
-    private Shop shop;
+    private static String url;
+    private static Shop shop;
     private WebView webView;
-    private TextView link, title, price;
+    private TextView linkTxt, title, price, stdPrice, discount;
+    private EditText linkEdt;
     private Button add;
     private Product product;
     private Statistics statistics;
@@ -49,16 +51,31 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
-        link = (TextView) findViewById(R.id.txtLink);
-        add = (Button) findViewById(R.id.btnAdd);
-        add.setOnClickListener(this);
-        title = (TextView) findViewById(R.id.txtTitle);
-        add.setEnabled(false);
+        linkTxt = (TextView) findViewById(R.id.txtLink);
+//        title = (TextView) findViewById(R.id.txtTitle);
         price = (TextView) findViewById(R.id.txtPrice);
+        stdPrice = (TextView)  findViewById(R.id.txtStdPrice);
+        discount = (TextView)  findViewById(R.id.txtVDiscount);
+        linkEdt = (EditText) findViewById(R.id.edtLink);
+
+        add = (Button) findViewById(R.id.btnAdd);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long idP = ProductsDAO.addProduct(ShopActivity.this, product);
+                if(idP > 0){
+//                    long ids = StatisticsDAO.addStatistics(ShopActivity.this, Statistics);
+                    Snackbar.make(v, "'" + product.getTitle() + "' was added to DB successfully...",
+                            Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+                }
+            }
+        });
 
         Bundle extras = this.getIntent().getExtras();
         shop = extras.getParcelable(EXTRA_SHOP);
-        setTitle(shop.getTitle());
+
+        init();
 
         webView = (WebView) findViewById(R.id.webView2);
         webView.clearCache(true);
@@ -69,7 +86,9 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         webView.setWebViewClient(new myWebViewClient());
         url = shop.getUrl();
         webView.loadUrl("http://www.farmers.co.nz/beauty/perfume/women-s-perfumes/paco-rabanne-black-xs-for-her-edt-80ml-5036494003");
-
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(butCalculate.getWindowToken(),
+//                InputMethodManager.HIDE_NOT_ALWAYS);
 
     }
 
@@ -82,9 +101,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void onClick(View v) {
-//        ProductsDAO.addProduct();
+    public static void setUrl(String url){
+        ShopActivity.url = url;
     }
 
     private class myWebViewClient extends WebViewClient {
@@ -101,55 +119,35 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            ShopActivity.setUrl(url);
+            init();
             Snackbar.make(view, url, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-            link.setText(url);
+            linkTxt.setText(url);
+            linkEdt.setVisibility(View.GONE);
+            linkEdt.setText(url);
             //link.setText();
             Parse parse = new Parse();
             ArrayList<String> list = new ArrayList<>();
             list.add(url);
             list = Utility.getParseParansList(list, shop);
             parse.execute(list);
-            HashMap<String, String> result = new HashMap<>();
-            try {
-                result = parse.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+//            HashMap<String, String> result = new HashMap<>();
 
-            if (!(product == null)) {
-                price.setTextColor(Color.parseColor("#000000"));
-                add.setEnabled(true);
-                title.setText(product.getTitle());
-                product.setUrl(url);
-                if(statistics.getStdPrice() > 0) {
-                    price.setText(String.valueOf(statistics.getStdPrice()));
-                } else if(statistics.getDiscPrice() > 0) {
-                    NumberFormat format = NumberFormat.getCurrencyInstance();
-                    price.setText(String.valueOf(format.format(statistics.getDiscPrice())));
-                    price.setTextColor(Color.parseColor("#FF0000"));
-                }
-
-
-            } else {
-                add.setEnabled(false);
-            }
 
         }
     }
 
-    class Parse extends AsyncTask<ArrayList<String>, Void, HashMap<String, String>> {
+    class Parse extends AsyncTask<ArrayList<String>, Void, Void> {
 
 
         @Override
-        protected HashMap<String, String> doInBackground(ArrayList<String>... params) {
+        protected Void doInBackground(ArrayList<String>... params) {
 
             product = new Product();
             statistics = new Statistics();
 
-            HashMap hm = new HashMap();
+//            HashMap hm = new HashMap();
             Document document;
             try {
 
@@ -160,6 +158,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                     String value;
                     if (param.equals("title")) {
                         value = document.title();
+                        if(value.contains(" - ")) value = value.substring(0, value.indexOf(" - "));
 //                        hm.put(param, value);
                         product.setTitle(value);
 //                    } else
@@ -172,7 +171,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         value = "";
                         String[] paramss = param.split("###");
-                        elements = document.select("."+paramss[0]);
+                        elements = document.select("." + paramss[0]);
                         for (Element element : elements) {
 
                             if (paramss.length > 1) {
@@ -181,6 +180,11 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                                     value = childNode.absUrl(paramss[1]);
                                     if (!value.isEmpty()) {
                                         product.setImgUrl(value);
+//                                        hm.put(param, value);
+                                    }
+                                    value = childNode.absUrl(paramss[2]);
+                                    if (!value.isEmpty()) {
+                                        product.setTitle(value);
 //                                        hm.put(param, value);
                                     }
                                 }
@@ -193,7 +197,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
                                     if (param.equals(shop.getStdPrice())) {
                                         value = Utility.onlyNumbers(value);
-                                        statistics.setStdPrice(Double.parseDouble(value));                                    }
+                                        statistics.setStdPrice(Double.parseDouble(value));
+                                    }
 
                                     if (param.equals(shop.getDiscPrice())) {
                                         value = Utility.onlyNumbers(value);
@@ -216,11 +221,10 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
                             }
 
                         }
-                        if ((param.equals("." + shop.getImgUrl())) && (hm.size() < 2)) {
+                        if ((param.equals(shop.getImgUrl())) && (product.getImgUrl() == null || product.getImgUrl().isEmpty())) {
                             product = null;
 //                            hm.clear();
-                            return hm;
-
+                            return null;
                         }
 
                     }
@@ -228,13 +232,47 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return hm;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(HashMap<String, String> stringStringHashMap) {
+        protected void onPostExecute(Void aVoid) {
+            price.setTextColor(Color.parseColor("#000000"));
+            if (!(product == null)) {
+                if(ProductsDAO.getProductsByUrl(ShopActivity.this, url) == 0) {
+                    add.setEnabled(true);
+                }
+                setTitle(shop.getTitle() + " - " + product.getTitle());
+//                title.setText(product.getTitle());
+//                title.setVisibility(View.GONE);
+                product.setUrl(url);
+                product.setShopId(ShopActivity.shop.getId());
+                NumberFormat format = NumberFormat.getCurrencyInstance();
+                if (statistics.getStdPrice() > 0) {
+                    price.setText(format.format(statistics.getStdPrice()));
+                } else if (statistics.getDiscPrice() > 0) {
+                    price.setText(format.format(statistics.getDiscPrice()));
+                    stdPrice.setText(format.format(statistics.getOldPrice()));
+                    format = NumberFormat.getPercentInstance();
+                    Double disc = (statistics.getOldPrice() - statistics.getDiscPrice()) / statistics.getOldPrice();
+                    discount.setText(format.format(disc));
+                    price.setTextColor(Color.parseColor("#FF0000"));
+                }
 
-            super.onPostExecute(stringStringHashMap);
+
+            } else {
+                add.setEnabled(false);
+            }
         }
+    }
+
+    private void init(){
+        setTitle(shop.getTitle());
+        add.setEnabled(false);
+//        title.setText("");
+        price.setText("");
+        stdPrice.setText("");
+        discount.setText("");
+        price.setTextColor(Color.parseColor("#000000"));
     }
 }
