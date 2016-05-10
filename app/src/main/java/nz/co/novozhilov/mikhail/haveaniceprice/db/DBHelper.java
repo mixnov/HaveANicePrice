@@ -80,6 +80,10 @@ public final class DBHelper extends SQLiteOpenHelper {
     private static String fullDBFileName;
 
 
+    /**
+     *
+     * @param context - App context
+     */
     @SuppressLint("SdCardPath")
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -191,6 +195,10 @@ public final class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
+    /**
+     *
+     * @throws IOException
+     */
     void writeFileSD()  throws IOException {
         // проверяем доступность SD
         if (!Environment.getExternalStorageState().equals(
@@ -224,6 +232,10 @@ public final class DBHelper extends SQLiteOpenHelper {
         myInput.close();
     }
 
+    /**
+     *
+     * @return - SD Card path
+     */
     private String getSDcardPath()
     {
         String exts =  Environment.getExternalStorageDirectory().getPath();

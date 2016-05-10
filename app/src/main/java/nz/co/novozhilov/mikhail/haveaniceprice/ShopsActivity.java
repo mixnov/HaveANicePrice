@@ -2,16 +2,13 @@ package nz.co.novozhilov.mikhail.haveaniceprice;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ListView;
 
-import nz.co.novozhilov.mikhail.haveaniceprice.fargments.MainMenuFragment;
 import nz.co.novozhilov.mikhail.haveaniceprice.fargments.ShopsListFragment;
 
 /**
+ * Activity with list of shops
  * Created by Mikhail on 29.04.2016.
  */
 public class ShopsActivity  extends AppCompatActivity {

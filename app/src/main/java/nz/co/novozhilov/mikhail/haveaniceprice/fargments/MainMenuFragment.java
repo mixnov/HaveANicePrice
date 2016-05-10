@@ -17,6 +17,9 @@ import nz.co.novozhilov.mikhail.haveaniceprice.ShopsActivity;
  */
 public class MainMenuFragment extends Fragment implements View.OnClickListener {
 
+    /**
+     *
+     */
     public MainMenuFragment() {
     }
 
@@ -59,31 +62,25 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         // action depends on the view's id
         switch (v.getId()) {
             case R.id.btn_main_shops:
-                // start java test menu fragment
-                //startFragment(ShopsListFragment.newInstance());
-                //startFragment(new ShopsListFragment());
-                Intent questionActivity = new Intent(v.getContext(), ShopsActivity.class);
-//                questionActivity.putExtra(QuestionActivity.EXTRA_TEST_TYPE, mTestType);
-//                int categoryId = mCategoryAdapter.getItem(position).getId();
-//                questionActivity.putExtra(QuestionActivity.EXTRA_CATEGORY, categoryId);
-                v.getContext().startActivity(questionActivity);
+                Intent shopsActivity = new Intent(v.getContext(), ShopsActivity.class);
+                v.getContext().startActivity(shopsActivity);
 
                 break;
             case R.id.btn_main_wish_list:
-                // open menu for a c test
-//                startFragment(new MenuCFragment());
+                // open wishlist
+//                startFragment(new WishListFragment());
                 break;
             case R.id.btn_main_statistics:
-                // show statistics by groups (java/c):
+                // show statistics
 //                startFragment(new StatisticsFragment());
                 break;
             case R.id.btn_main_about:
-                // show statistics by groups (java/c):
+                // show about fragment:
                 startFragment(new AboutFragment());
                 break;
             case R.id.btn_main_feedback:
-                // show statistics by groups (java/c):
-//                startFragment(new StatisticsFragment());
+                // show feedback fragment:
+//                startFragment(new FeedbackFragment());
                 break;
         }
 

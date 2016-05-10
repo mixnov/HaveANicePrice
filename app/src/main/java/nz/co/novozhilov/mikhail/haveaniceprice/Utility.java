@@ -13,7 +13,12 @@ import java.util.TimeZone;
  * Class contains the additional methods
  */
 public class Utility {
-    public static String longToDate(Long currentTime){
+    /**
+     *
+     * @param currentTime Time in mills
+     * @return Formated string
+     */
+    public static String longToDate(long currentTime){
 //        long currentTime = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss,SSS", Locale.US);
 
@@ -22,37 +27,36 @@ public class Utility {
         return sdf.format(calendar.getTime());
     }
 
-    public static Object setProperty(Object object, String fieldName, String value) throws NoSuchFieldException, IllegalAccessException {
+    /**
+     *
+     * @param object Object
+     * @param fieldName Name of the field we want to set
+     * @param value The
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    public static void setProperty(Object object, String fieldName, String value) throws NoSuchFieldException, IllegalAccessException {
         Field field = object.getClass().getDeclaredField(fieldName);
-        if (field.getType() == Character.TYPE) {field.set(object.getClass(), value.charAt(0)); return object;}
-        if (field.getType() == Short.TYPE) {field.set(object.getClass(), Short.parseShort(value)); return object;}
-        if (field.getType() == Integer.TYPE) {field.set(object.getClass(), Integer.parseInt(value)); return object;}
-        if (field.getType() == Long.TYPE) {field.set(object.getClass(), Long.parseLong(value)); return object;}
-        if (field.getType() == Float.TYPE) {field.set(object.getClass(), Float.parseFloat(value)); return object;}
-        if (field.getType() == Double.TYPE) {field.set(object.getClass(), Double.parseDouble(value)); return object;}
-        if (field.getType() == Byte.TYPE) {field.set(object.getClass(), Byte.parseByte(value)); return object;}
-        if (field.getType() == Boolean.TYPE) {field.set(object.getClass(), Boolean.parseBoolean(value)); return object;}
+        if (field.getType() == Character.TYPE) {field.set(object.getClass(), value.charAt(0)); return;}
+        if (field.getType() == Short.TYPE) {field.set(object.getClass(), Short.parseShort(value)); return;}
+        if (field.getType() == Integer.TYPE) {field.set(object.getClass(), Integer.parseInt(value)); return;}
+        if (field.getType() == Long.TYPE) {field.set(object.getClass(), Long.parseLong(value)); return;}
+        if (field.getType() == Float.TYPE) {field.set(object.getClass(), Float.parseFloat(value)); return;}
+        if (field.getType() == Double.TYPE) {field.set(object.getClass(), Double.parseDouble(value)); return;}
+        if (field.getType() == Byte.TYPE) {field.set(object.getClass(), Byte.parseByte(value)); return;}
+        if (field.getType() == Boolean.TYPE) {field.set(object.getClass(), Boolean.parseBoolean(value)); return;}
         Field[] fields = object.getClass().getFields();
-//        fields[0].
         field.set(object.getClass(), value);
-        return object;
     }
 
+    /**
+     *
+     * @param list The list we need to fill
+     * @param shop The Shop object where I get the parameters to fill thi list
+     */
     public static void getParseParansList(String[] list, Shop shop){
-//        public static ArrayList<String> getParseParansList(ArrayList<String> list, Shop shop){
-        //ArrayList<String> list = new ArrayList<>();
-        //list = getFields(list, shop);
-//        list.add("title");
-//        //list.add(shop.getTitle());
-//        list.add(shop.getImgUrl());
-//        list.add(shop.getSpecial());
-//        list.add(shop.getStdPrice());
-//        list.add(shop.getDiscPrice());
-//        list.add(shop.getOldPrice());
-//        list.add(shop.getSavePrice());
 
         list[1] = "title";
-        //list.add(shop.getTitle());
         list[2] = shop.getImgUrl();
         list[3] = shop.getSpecial();
         list[4] = shop.getStdPrice();
@@ -61,23 +65,28 @@ public class Utility {
         list[7] = shop.getSavePrice();
     }
 
-    public static ArrayList<String> getFields(ArrayList<String> list, Object object){
+    /**
+     *
+     * @param list The list of fields
+     * @param object Object
+     */
+    public static void getFields(ArrayList<String> list, Object object){
         Field[] fields = object.getClass().getDeclaredFields();
         String _package =  object.getClass().getPackage().getName();
         for (Field field : fields) {
-//            for (int i = 0; i < fields.length; i++) {
-//            Field field = fields[i];
             String fieldName = field.toString();
             if (!fieldName.contains("private")) continue;
             fieldName = field.getName();
             if (fieldName.charAt(0)=='_') continue;
             if (list.indexOf(fieldName) > -1) continue;
-//            fieldName = fieldName.substring(fieldName.indexOf(_package) + _package.length());
             list.add(fieldName);
         }
-        return list;
     }
 
+    /**
+     *
+     * @param number - The string with number
+     */
     public static String onlyNumbers(String number){
         String result="";
         byte codes[] = number.getBytes();

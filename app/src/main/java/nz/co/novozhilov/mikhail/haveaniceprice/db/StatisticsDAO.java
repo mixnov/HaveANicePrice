@@ -21,9 +21,9 @@ public class StatisticsDAO {
     /**
      * Generate sql query string
      *
-     * @param productFilter - additional join and/or where clause
-     * @param addStatement - additional sta
-     * * @return string of query
+     * @param productFilter - Additional where clause
+     * @param addStatement - Additional statement
+     * @return - The query string
      */
     static String getStatisticsQuery(String productFilter, String addStatement) {
         //SELECT tsh.title, tp.title, ts.date, ts.special, ts.price, ts.std_price, ts.disc_price, ts.old_price, ts.save_price  FROM stat ts JOIN products tp ON ts.product_id = tp._id JOIN shops tsh ON tp.shop_id = tsh._id
@@ -49,28 +49,35 @@ public class StatisticsDAO {
                 " ORDER BY tsh." + DBHelper.COLUMN_SH_TITLE + ", tpr." + DBHelper.COLUMN_P_TITLE;
     }
 
-    static ArrayList<Statistics> getStatistics(Context context, String whereClause, String addStatement) {
+    /**
+     *
+     * @param context - App context
+     * @param whereClause - The where clause of the query
+     * @param addStatement - The additional statement for the query
+     * @return - The list of Statistics objects
+     */
+    public static ArrayList<Statistics> getStatistics(Context context, String whereClause, String addStatement) {
         // open connection to the database
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // create empty array list for Statistics
         ArrayList<Statistics> statisticsList = new ArrayList<>();
-        // create custom query to get data from questions and answers
+        // create custom query to get data from Statistics
         String getStatistics = getStatisticsQuery(whereClause, addStatement);
         // execute query
         Cursor cursor = db.rawQuery(getStatistics, null);
 
-        int current_id = -1;
+        long current_id = -1;
         Statistics statistics;
 
         // loop through the results
         if (cursor.moveToFirst()) {
             do {
-                int id = cursor.getInt(0);
+                long id = cursor.getInt(0);
                 String shopTitle    = cursor.getString(1);
                 String productTitle = cursor.getString(2);
-                int productId       = cursor.getInt(3);
-                long date           = cursor.getInt(4);
+                long productId       = cursor.getLong(3);
+                long date           = cursor.getLong(4);
                 String special      = cursor.getString(5);
                 Double price        = cursor.getDouble(6);
                 Double std_price    = cursor.getDouble(7);
@@ -98,10 +105,10 @@ public class StatisticsDAO {
      * get all Statistics for the Product
      *
      * @param context  - app context
-     * @param shopId - java test, C test, etc.
-     * @return list of questions
+     * @param shopId - ID of the Shop in DB
+     * @return list of Statistics records
      */
-    static ArrayList<Statistics> getStatisticsByShop(Context context, int shopId) {
+    public static ArrayList<Statistics> getStatisticsByShop(Context context, long shopId) {
         String whereClause = " WHERE tsh." + DBHelper.COLUMN_ID + " = " + String.valueOf(shopId);
         return getStatistics(context, whereClause, "");
     }
@@ -111,9 +118,9 @@ public class StatisticsDAO {
      *
      * @param context  - app context
      * @param productId - ID of the product
-     * @return list of questions
+     * @return list of Statistics records
      */
-    static ArrayList<Statistics> getStatisticsByProduct(Context context, int productId) {
+    public static ArrayList<Statistics> getStatisticsByProduct(Context context, long productId) {
         String whereClause = " WHERE tpr." + DBHelper.COLUMN_ID + " = " + String.valueOf(productId);
         return getStatistics(context, whereClause, "");
     }
@@ -124,8 +131,6 @@ public class StatisticsDAO {
      * @param statistics - Statistics Object for writing to DB
      */
     public static long addStatistics(Context context, Statistics statistics) {
-
-
 
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -142,7 +147,6 @@ public class StatisticsDAO {
         values.put(DBHelper.COLUMN_ST_SAVE_PRICE, statistics.getSavePrice());
 
         //insert into db (if id is already there - ignore)
-//        long id = db.insertWithOnConflict(DBHelper.TABLE_STATISTICS, null, values, SQLiteDatabase.CONFLICT_ABORT);
         long id = db.insert(DBHelper.TABLE_STATISTICS, null, values);
 
         //close connection
@@ -158,7 +162,7 @@ public class StatisticsDAO {
      *
      * @param productId - Product's id in the database
      */
-    static int removeStatisticsByProduct(Context context, int productId) {
+    static int removeStatisticsByProduct(Context context, long productId) {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -180,7 +184,7 @@ public class StatisticsDAO {
      *
      * @param shopId - Shop's id in the database
      */
-    static int removeStatisticsByShop(Context context, int shopId) {
+    static int removeStatisticsByShop(Context context, long shopId) {
 //        DBHelper dbHelper = new DBHelper(context);
 //        SQLiteDatabase db = dbHelper.getWritableDatabase();
 //
@@ -216,4 +220,3 @@ public class StatisticsDAO {
     }
 
 }
-

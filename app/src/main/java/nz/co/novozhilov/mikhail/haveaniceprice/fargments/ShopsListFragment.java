@@ -21,7 +21,7 @@ import nz.co.novozhilov.mikhail.haveaniceprice.db.ShopsDAO;
 
 
 /**
- * Fragment with a list of category
+ * Fragment with a list of Shops
  *
  * @author Mikhail Novozhilov novomic@gmail.com
  */
@@ -63,7 +63,7 @@ public final class ShopsListFragment extends ListFragment{
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // create new question activity with selected category
+        // create new Shops activity
         Intent shopActivity = new Intent(v.getContext(), ShopActivity.class);
         int shopId = (int) mShopAdapter.getItem(position).getId();
         Shop shop = mShops.get(shopId-1);
@@ -103,6 +103,10 @@ public final class ShopsListFragment extends ListFragment{
      */
     private class ShopAdapter extends ArrayAdapter<Shop> {
 
+        /**
+         *
+         * @param shops - The Object for the adapter
+         */
         public ShopAdapter(ArrayList<Shop> shops) {
             super(getActivity(), R.layout.menu_list_item, shops);
         }
@@ -115,11 +119,8 @@ public final class ShopsListFragment extends ListFragment{
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.menu_list_item,parent,false);
             }
-            // Set view for category (Shop object)
+            // Set view for Shop object
             Shop c = getItem(position);
-//            TextView titleTextView =
-//                    (TextView)convertView.findViewById(R.id.shops_list_item_title);
-//            titleTextView.setText(c.getTitle());
             String drawTitle = c.getTitle().toLowerCase();
             drawTitle = drawTitle.replaceAll(" ", "");
             int resID = getResources().getIdentifier(drawTitle, "drawable", getActivity().getPackageName());
@@ -131,6 +132,5 @@ public final class ShopsListFragment extends ListFragment{
 
             return convertView;
         }
-
     }
 }

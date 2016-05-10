@@ -42,7 +42,7 @@ public class ShopActivity extends AppCompatActivity {
     private static String url;
     private static Shop shop;
     private WebView webView;
-    private TextView linkTxt, title, price, stdPrice, discount;
+    private TextView linkTxt, price, stdPrice, discount;
     private EditText linkEdt;
     private Button add;
     private Product product;
@@ -56,7 +56,6 @@ public class ShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shop);
 
         linkTxt = (TextView) findViewById(R.id.txtLink);
-//        title = (TextView) findViewById(R.id.txtTitle);
         price = (TextView) findViewById(R.id.txtPrice);
         stdPrice = (TextView) findViewById(R.id.txtStdPrice);
         discount = (TextView) findViewById(R.id.txtVDiscount);
@@ -96,15 +95,11 @@ public class ShopActivity extends AppCompatActivity {
         webView.clearHistory();
         webView.clearCache(true);
 
-//        webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setSupportZoom(true);
         webView.setWebViewClient(new myWebViewClient());
         url = shop.getUrl();
         webView.loadUrl("http://www.farmers.co.nz/beauty/perfume/women-s-perfumes/paco-rabanne-black-xs-for-her-edt-80ml-5036494003");
-//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(butCalculate.getWindowToken(),
-//                InputMethodManager.HIDE_NOT_ALWAYS);
 
     }
 
@@ -121,6 +116,9 @@ public class ShopActivity extends AppCompatActivity {
         ShopActivity.url = url;
     }
 
+    /**
+     * The class for WebViewClient for WebView
+     */
     private class myWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.startsWith("mailto:") || url.startsWith("tel:")) {
@@ -144,54 +142,39 @@ public class ShopActivity extends AppCompatActivity {
             linkEdt.setText(url);
             //link.setText();
             Parse parse = new Parse();
-//            ArrayList<String> list = new ArrayList<>();
-//            list.add(url);
             String[] list = new String[8];
             list[0] = url;
             Utility.getParseParansList(list, shop);
             parse.execute(list);
-//            HashMap<String, String> result = new HashMap<>();
 
 
         }
     }
 
+    /**
+     * AsyncTask to parse the web pages
+     */
     class Parse extends AsyncTask<String, Void, Void> {
-//        class Parse extends AsyncTask<ArrayList<String>, Void, Void> {
-
 
         @Override
         protected Void doInBackground(String... params) {
-//            protected Void doInBackground(ArrayList<String>... params) {
 
             product = new Product();
             statistics = new Statistics();
 
-//            HashMap hm = new HashMap();
             Document document;
             try {
 
                 String param = params[0];
                 document = Jsoup.connect(param).get();
                 for (int i = 1; i < params.length; i++) {
-//                    for (int i = 1; i < params[0].size(); i++) {
                     param = params[i];
-//                    param = params[0].get(i);
                     String value;
                     if (param.equals("title")) {
                         value = document.title();
                         if (value.contains(" - ")) value = value.substring(0, value.indexOf(" - "));
-//                        hm.put(param, value);
                         product.setTitle(value);
-//                    } else
-//                        elements = document.select(param);
-//                        String val = "";
-//                        for (Element element : elements) {
-//                            val = element.text();
-//                        }
-//                        if (val.isEmpty()) break;
                     } else {
-//                        value = "";
                         String[] paramss = param.split("###");
                         elements = document.select("." + paramss[0]);
                         for (Element element : elements) {
@@ -202,12 +185,10 @@ public class ShopActivity extends AppCompatActivity {
                                     value = childNode.absUrl(paramss[1]);
                                     if (!value.isEmpty()) {
                                         product.setImgUrl(value);
-//                                        hm.put(param, value);
                                     }
                                     value = childNode.absUrl(paramss[2]);
                                     if (!value.isEmpty()) {
                                         product.setTitle(value);
-//                                        hm.put(param, value);
                                     }
                                 }
                             } else {
@@ -236,19 +217,13 @@ public class ShopActivity extends AppCompatActivity {
                                         value = Utility.onlyNumbers(value);
                                         statistics.setSavePrice(Double.parseDouble(value));
                                     }
-
-//                                    hm.put(param, value);
-
                                 }
                             }
-
                         }
                         if ((param.equals(shop.getImgUrl())) && (product.getImgUrl() == null || product.getImgUrl().isEmpty())) {
                             product = null;
-//                            hm.clear();
                             return null;
                         }
-
                     }
                 }
             } catch (IOException e) {
@@ -265,8 +240,6 @@ public class ShopActivity extends AppCompatActivity {
                     add.setText("+");
                 }
                 setTitle(shop.getTitle() + " - " + product.getTitle());
-//                title.setText(product.getTitle());
-//                title.setVisibility(View.GONE);
                 product.setUrl(url);
                 product.setShopId(ShopActivity.shop.getId());
                 NumberFormat format = NumberFormat.getCurrencyInstance();
@@ -280,18 +253,18 @@ public class ShopActivity extends AppCompatActivity {
                     discount.setText(format.format(disc));
                     price.setTextColor(Color.parseColor("#FF0000"));
                 }
-
-
             } else {
                 add.setText("-");
             }
         }
     }
 
+    /**
+     * Method to initialise some variables
+     */
     private void init() {
         setTitle(shop.getTitle());
         add.setText("+");
-//        title.setText("");
         price.setText("");
         stdPrice.setText("");
         discount.setText("");

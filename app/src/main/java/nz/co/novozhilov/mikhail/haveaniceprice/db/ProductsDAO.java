@@ -11,7 +11,7 @@ import nz.co.novozhilov.mikhail.haveaniceprice.Product;
 
 /**
  * Data access methods for Products entities
- * <p>
+ *
  * Created by Mikhail on 03.05.2016.
  */
 public class ProductsDAO {
@@ -33,6 +33,12 @@ public class ProductsDAO {
                 filter + " ORDER BY " + DBHelper.COLUMN_P_TITLE;
     }
 
+    /**
+     *
+     * @param context - App context
+     * @param whereClause - The where clause of the query
+     * @return - The list of Products
+     */
     static ArrayList<Product> getProducts(Context context, String whereClause) {
         // open connection to the database
         DBHelper dbHelper = new DBHelper(context);
@@ -44,15 +50,15 @@ public class ProductsDAO {
         // execute query
         Cursor cursor = db.rawQuery(selectProducts, null);
 
-        int current_id = -1;
+        long current_id = -1;
         Product product;
 
         // loop through the results
         if (cursor.moveToFirst()) {
             do {
-                int qId = cursor.getInt(0);
+                long qId = cursor.getLong(0);
                 if (qId != current_id) {
-                    int pShopId = cursor.getInt(1);
+                    long pShopId = cursor.getLong(1);
                     String pUrl = cursor.getString(2);
                     String pTitle = cursor.getString(3);
                     String pImgUrl = cursor.getString(4);
@@ -75,10 +81,10 @@ public class ProductsDAO {
     }
 
     /**
-     * get all products
+     * get all Products
      *
      * @param context  - app context
-     * @return list of products
+     * @return list of Products
      */
     static ArrayList<Product> getAllProducts(Context context) {
         return getProducts(context, "");
@@ -91,7 +97,7 @@ public class ProductsDAO {
      * @param url - url of the product.
      * @return id
      */
-    public static int getProductsByUrl(Context context, String url) {
+    public static long getProductsByUrl(Context context, String url) {
         String whereClause = " WHERE " + DBHelper.COLUMN_P_URL + " = '" + url + "'";
         ArrayList<Product> products = getProducts(context, whereClause);
 
@@ -99,21 +105,18 @@ public class ProductsDAO {
     }
 
     /**
-     * get all questions with wrong answer
+     * get discounted products
      *
      * @param context  - app context
-     * @return list of questions
+     * @return list of products
      */
     static ArrayList<Product> getDiscountedProducts(Context context) {
-//        String whereClause = " INNER JOIN " + DBHelper.TABLE_MISTAKES + " te ON te." +
-//                DBHelper.COLUMN_ID + " = tq." + DBHelper.COLUMN_ID +
-//                " WHERE tq." + DBHelper.COLUMN_TEST + " = " + testType;
         return getProducts(context, "");
     }
 
 
     /**
-     * Add product to the table
+     * Add Product to the table
      *
      * @param product - product for writing to DB
      */
@@ -127,7 +130,7 @@ public class ProductsDAO {
         values.put(DBHelper.COLUMN_P_TITLE, product.getTitle());
         values.put(DBHelper.COLUMN_P_IMG_URL, product.getImgUrl());
 
-        //insert into db (if id is already there - ignore)
+        //insert into db
         long id = db.insert(DBHelper.TABLE_PRODUCTS, null, values);
 
         //close connection
@@ -139,11 +142,11 @@ public class ProductsDAO {
 
 
     /**
-     * Remove question from mistake table
+     * Remove Product by ID
      *
-     * @param productID - question's id in the database
+     * @param productID - Product's id in the database
      */
-    static void removeProduct(Context context, int productID) {
+    static void removeProduct(Context context, long productID) {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -159,7 +162,8 @@ public class ProductsDAO {
     }
 
     /**
-     * Remove all questions from mistake table
+     * Remove all Products from the table
+     * @param context - App context
      */
     static void removeAllProducts(Context context) {
         DBHelper dbHelper = new DBHelper(context);

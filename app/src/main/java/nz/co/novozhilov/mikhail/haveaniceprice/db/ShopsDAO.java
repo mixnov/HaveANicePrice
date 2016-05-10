@@ -9,26 +9,24 @@ import java.util.ArrayList;
 
 import nz.co.novozhilov.mikhail.haveaniceprice.Shop;
 
-
 /**
- * Data access methods for Question entities
+ * Data access methods for Shops entities
  *
  * @author Mikhail Novozhilov novomic@gmail.com
  */
 public class ShopsDAO {
 
-
     /**
-     * get all categories for test type
+     * get all Shops
      *
-     * @param context  - app context
-     * @return list of questions
+     * @param context  - App context
+     * @return - The list of Shops
      */
     public static ArrayList<Shop> getShopsList(Context context) {
         // open connection to the database
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        // create empty array list for categories
+        // create empty array list for Shops
         ArrayList<Shop> shops = new ArrayList<>();
         Cursor cursor = db.query(DBHelper.TABLE_SHOPS,
                 new String[]{DBHelper.COLUMN_ID, DBHelper.COLUMN_SH_URL, DBHelper.COLUMN_SH_TITLE,
@@ -39,7 +37,7 @@ public class ShopsDAO {
         // loop through the results
         if (cursor.moveToFirst()) {
             do {
-                int sId = cursor.getInt(0);
+                long sId = cursor.getInt(0);
                 String sUrl = cursor.getString(1);
                 String sTitle = cursor.getString(2);
                 String sImgUrl = cursor.getString(3);
