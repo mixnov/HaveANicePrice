@@ -98,4 +98,10 @@ public class Product implements Parcelable {
             return new Shop[size];
         }
     };
+
+    public boolean isEmpty() {
+        return this.shop_id == 0 || this.url == null  || this.url.equals("") ||
+                this.title == null || this.title.equals("") || this.img_url == null ||
+                this.img_url.equals("");
+    }
 }

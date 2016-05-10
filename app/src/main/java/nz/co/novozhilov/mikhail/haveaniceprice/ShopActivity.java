@@ -66,6 +66,7 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (add.getText().equals("+")) {
+                    if (product.isEmpty()) return;
                     long idP = ProductsDAO.addProduct(ShopActivity.this, product);
                     if (idP > 0) {
                         statistics.setProductId(idP);
@@ -94,7 +95,7 @@ public class ShopActivity extends AppCompatActivity {
         assert webView != null;
         webView.clearHistory();
         webView.clearCache(true);
-
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setSupportZoom(true);
         webView.setWebViewClient(new myWebViewClient());
@@ -236,9 +237,10 @@ public class ShopActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             price.setTextColor(Color.parseColor("#000000"));
             if (!(product == null)) {
-                if (ProductsDAO.getProductsByUrl(ShopActivity.this, url) == 0) {
-                    add.setText("+");
-                }
+                add.setEnabled(true);
+                if (ProductsDAO.getProductsByUrl(ShopActivity.this, url) == 0) add.setText("+");
+                else add.setText("-");
+
                 setTitle(shop.getTitle() + " - " + product.getTitle());
                 product.setUrl(url);
                 product.setShopId(ShopActivity.shop.getId());
@@ -254,7 +256,8 @@ public class ShopActivity extends AppCompatActivity {
                     price.setTextColor(Color.parseColor("#FF0000"));
                 }
             } else {
-                add.setText("-");
+                add.setText("+");
+                add.setEnabled(false);
             }
         }
     }

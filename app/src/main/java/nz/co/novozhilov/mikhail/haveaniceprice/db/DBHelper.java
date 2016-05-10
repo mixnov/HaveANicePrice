@@ -28,7 +28,7 @@ public final class DBHelper extends SQLiteOpenHelper {
 //    private static final Boolean REWRITE_DB = false;
     private static final int DB_VERSION = 1; // DB version (used on upgrade)
 //    private static String DB_PATH = "/data/data/";
-    private static String DB_NAME = "havaniceprice.db";     // Database Name
+    private static String DB_NAME = "haveaniceprice.db";     // Database Name
     private static final int SCHEMA = 1; // версия базы данных
 
     private SQLiteDatabase mDataBase = null;
