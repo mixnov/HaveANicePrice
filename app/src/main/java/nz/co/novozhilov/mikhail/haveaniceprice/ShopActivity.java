@@ -1,5 +1,6 @@
 package nz.co.novozhilov.mikhail.haveaniceprice;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -24,13 +25,16 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 
 import nz.co.novozhilov.mikhail.haveaniceprice.db.ProductsDAO;
+import nz.co.novozhilov.mikhail.haveaniceprice.db.StatisticsDAO;
 
 /**
  * Created by Mikhail on 29.04.2016.
+ * <p/>
+ * Activity of a shop
  */
+@SuppressLint("SetJavaScriptEnabled")
 public class ShopActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = ShopActivity.class.getSimpleName();
@@ -54,18 +58,27 @@ public class ShopActivity extends AppCompatActivity {
         linkTxt = (TextView) findViewById(R.id.txtLink);
 //        title = (TextView) findViewById(R.id.txtTitle);
         price = (TextView) findViewById(R.id.txtPrice);
-        stdPrice = (TextView)  findViewById(R.id.txtStdPrice);
-        discount = (TextView)  findViewById(R.id.txtVDiscount);
+        stdPrice = (TextView) findViewById(R.id.txtStdPrice);
+        discount = (TextView) findViewById(R.id.txtVDiscount);
         linkEdt = (EditText) findViewById(R.id.edtLink);
 
         add = (Button) findViewById(R.id.btnAdd);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long idP = ProductsDAO.addProduct(ShopActivity.this, product);
-                if(idP > 0){
-//                    long ids = StatisticsDAO.addStatistics(ShopActivity.this, Statistics);
-                    Snackbar.make(v, "'" + product.getTitle() + "' was added to DB successfully...",
+                if (add.getText().equals("+")) {
+                    long idP = ProductsDAO.addProduct(ShopActivity.this, product);
+                    if (idP > 0) {
+                        statistics.setProductId(idP);
+                        long idS = StatisticsDAO.addStatistics(ShopActivity.this, statistics);
+                        if (idS > 0) {
+                            Snackbar.make(v, "'" + product.getTitle() + "' was added to DB successfully...",
+                                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            add.setText("-");
+                        }
+                    }
+                } else {
+                    Snackbar.make(v, "Sorry! You could not delete the product in this version.",
                             Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
                 }
@@ -78,9 +91,12 @@ public class ShopActivity extends AppCompatActivity {
         init();
 
         webView = (WebView) findViewById(R.id.webView2);
-        webView.clearCache(true);
+
+        assert webView != null;
         webView.clearHistory();
-        webView.getSettings().setJavaScriptEnabled(true);
+        webView.clearCache(true);
+
+//        webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setSupportZoom(true);
         webView.setWebViewClient(new myWebViewClient());
@@ -101,7 +117,7 @@ public class ShopActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public static void setUrl(String url){
+    public static void setUrl(String url) {
         ShopActivity.url = url;
     }
 
@@ -128,9 +144,11 @@ public class ShopActivity extends AppCompatActivity {
             linkEdt.setText(url);
             //link.setText();
             Parse parse = new Parse();
-            ArrayList<String> list = new ArrayList<>();
-            list.add(url);
-            list = Utility.getParseParansList(list, shop);
+//            ArrayList<String> list = new ArrayList<>();
+//            list.add(url);
+            String[] list = new String[8];
+            list[0] = url;
+            Utility.getParseParansList(list, shop);
             parse.execute(list);
 //            HashMap<String, String> result = new HashMap<>();
 
@@ -138,11 +156,13 @@ public class ShopActivity extends AppCompatActivity {
         }
     }
 
-    class Parse extends AsyncTask<ArrayList<String>, Void, Void> {
+    class Parse extends AsyncTask<String, Void, Void> {
+//        class Parse extends AsyncTask<ArrayList<String>, Void, Void> {
 
 
         @Override
-        protected Void doInBackground(ArrayList<String>... params) {
+        protected Void doInBackground(String... params) {
+//            protected Void doInBackground(ArrayList<String>... params) {
 
             product = new Product();
             statistics = new Statistics();
@@ -151,14 +171,16 @@ public class ShopActivity extends AppCompatActivity {
             Document document;
             try {
 
-                String param = params[0].get(0);
+                String param = params[0];
                 document = Jsoup.connect(param).get();
-                for (int i = 1; i < params[0].size(); i++) {
-                    param = params[0].get(i);
+                for (int i = 1; i < params.length; i++) {
+//                    for (int i = 1; i < params[0].size(); i++) {
+                    param = params[i];
+//                    param = params[0].get(i);
                     String value;
                     if (param.equals("title")) {
                         value = document.title();
-                        if(value.contains(" - ")) value = value.substring(0, value.indexOf(" - "));
+                        if (value.contains(" - ")) value = value.substring(0, value.indexOf(" - "));
 //                        hm.put(param, value);
                         product.setTitle(value);
 //                    } else
@@ -169,7 +191,7 @@ public class ShopActivity extends AppCompatActivity {
 //                        }
 //                        if (val.isEmpty()) break;
                     } else {
-                        value = "";
+//                        value = "";
                         String[] paramss = param.split("###");
                         elements = document.select("." + paramss[0]);
                         for (Element element : elements) {
@@ -239,8 +261,8 @@ public class ShopActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             price.setTextColor(Color.parseColor("#000000"));
             if (!(product == null)) {
-                if(ProductsDAO.getProductsByUrl(ShopActivity.this, url) == 0) {
-                    add.setEnabled(true);
+                if (ProductsDAO.getProductsByUrl(ShopActivity.this, url) == 0) {
+                    add.setText("+");
                 }
                 setTitle(shop.getTitle() + " - " + product.getTitle());
 //                title.setText(product.getTitle());
@@ -261,14 +283,14 @@ public class ShopActivity extends AppCompatActivity {
 
 
             } else {
-                add.setEnabled(false);
+                add.setText("-");
             }
         }
     }
 
-    private void init(){
+    private void init() {
         setTitle(shop.getTitle());
-        add.setEnabled(false);
+        add.setText("+");
 //        title.setText("");
         price.setText("");
         stdPrice.setText("");

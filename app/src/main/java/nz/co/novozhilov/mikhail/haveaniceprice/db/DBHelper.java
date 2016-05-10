@@ -24,9 +24,10 @@ import java.io.OutputStream;
 public final class DBHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = DBHelper.class.getName();
-
+    private static Boolean rewrite_db = true;
+//    private static final Boolean REWRITE_DB = false;
     private static final int DB_VERSION = 1; // DB version (used on upgrade)
-    private static String DB_PATH = "/data/data/";
+//    private static String DB_PATH = "/data/data/";
     private static String DB_NAME = "havaniceprice.db";     // Database Name
     private static final int SCHEMA = 1; // версия базы данных
 
@@ -94,7 +95,10 @@ public final class DBHelper extends SQLiteOpenHelper {
      * @return database opened for writing and reading
      */
     public boolean openDataBase() {
-//        createDB();
+        if(rewrite_db) {
+            createDB();
+            rewrite_db = false;
+        }
         if (!checkDataBase()) {
             createDB();
         }
@@ -150,8 +154,8 @@ public final class DBHelper extends SQLiteOpenHelper {
      * @throws IOException
      */
     private void copyDataBase() throws IOException {
-        InputStream myInput = null;
-        OutputStream myOutput = null;
+        InputStream myInput;
+        OutputStream myOutput;
         this.getReadableDatabase();
         // get source and target streams
         myInput = mContext.getAssets().open(DB_NAME);
@@ -198,11 +202,11 @@ public final class DBHelper extends SQLiteOpenHelper {
         File sdPath = Environment.getExternalStorageDirectory();
         sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
         boolean res;
-        res = sdPath.mkdirs();
+//        res = sdPath.mkdirs();
         // добавляем свой каталог к пути
         String sdFullDBFileName = sdPath.getAbsolutePath() + "/" + DB_NAME;
-        InputStream myInput = null;
-        OutputStream myOutput = null;
+        InputStream myInput;
+        OutputStream myOutput;
 //        this.getReadableDatabase();
         // get source and target streams
         myInput = new FileInputStream(fullDBFileName);

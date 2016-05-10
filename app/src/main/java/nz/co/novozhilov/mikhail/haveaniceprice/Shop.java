@@ -5,9 +5,11 @@ import android.os.Parcelable;
 
 /**
  * Created by Mikhail on 28.04.2016.
+ *
+ * Class represents the Shop
  */
 public class Shop implements Parcelable {
-    private int _id;
+    private long _id;
     private String url;
     private String title;
     private String img_url;
@@ -17,7 +19,7 @@ public class Shop implements Parcelable {
     private String old_price;
     private String save_price;
 
-    public Shop(int _id, String url, String title, String img_url, String special,
+    public Shop(long _id, String url, String title, String img_url, String special,
                 String std_price, String disc_price, String old_price, String save_price) {
         this._id = _id;
         this.url = url;
@@ -30,14 +32,14 @@ public class Shop implements Parcelable {
         this.save_price = save_price;
     }
 
-    public Shop(int _id, String url, String title) {
+    public Shop(long _id, String url, String title) {
         this._id = _id;
         this.url = url;
         this.title = title;
     }
 
     public Shop(Parcel in) {
-        this._id = in.readInt();
+        this._id = in.readLong();
         this.url = in.readString();
         this.title = in.readString();
         this.img_url = in.readString();
@@ -48,11 +50,11 @@ public class Shop implements Parcelable {
         this.save_price = in.readString();
     }
 
-    public int getId() {
+    public long getId() {
         return this._id;
     }
 
-    public void getId(int _id) {
+    public void getId(long _id) {
         this._id = _id;
     }
 
@@ -127,7 +129,7 @@ public class Shop implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this._id);
+        dest.writeLong(this._id);
         dest.writeString(this.url);
         dest.writeString(this.title);
         dest.writeString(this.img_url);

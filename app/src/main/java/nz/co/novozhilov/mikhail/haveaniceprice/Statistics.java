@@ -5,13 +5,18 @@ import android.os.Parcelable;
 
 /**
  * Created by Mikhail on 05.05.2016.
+ *
+ * Class represents the record of Statistics table of DB
+ *
  */
 public class Statistics implements Parcelable {
-    private int _id;
+    private long _id;
     private String shopTitle;
     private String productTitle;
     private long dateTime;
+    private long productId;
     private String special;
+    private double price;
     private double std_price;
     private double disc_price;
     private double old_price;
@@ -20,13 +25,16 @@ public class Statistics implements Parcelable {
     public Statistics() {
     }
 
-    public Statistics(int _id, String shopTitle, String productTitle, long dateTime, String special,
-                double std_price, double disc_price, double old_price, double save_price) {
+    public Statistics(long _id, String shopTitle, String productTitle, long productId, long dateTime,
+                      String special, double price, double std_price, double disc_price,
+                      double old_price, double save_price) {
         this._id = _id;
         this.shopTitle = shopTitle;
         this.productTitle = productTitle;
+        this.productId = productId;
         this.dateTime = dateTime;
         this.special = special;
+        this.price = price;
         this.std_price = std_price;
         this.disc_price = disc_price;
         this.old_price = old_price;
@@ -34,22 +42,24 @@ public class Statistics implements Parcelable {
     }
 
     public Statistics(Parcel in) {
-        this._id = in.readInt();
+        this._id = in.readLong();
         this.shopTitle = in.readString();
         this.productTitle = in.readString();
+        this.productId = in.readLong();
         this.dateTime = in.readLong();
         this.special = in.readString();
+        this.price = in.readDouble();
         this.std_price = in.readDouble();
         this.disc_price = in.readDouble();
         this.old_price = in.readDouble();
         this.save_price = in.readDouble();
     }
 
-    public int getId() {
+    public long getId() {
         return this._id;
     }
 
-    public void setId(int _id) {
+    public void setId(long _id) {
         this._id = _id;
     }
 
@@ -69,6 +79,14 @@ public class Statistics implements Parcelable {
         this.productTitle = productTitle;
     }
 
+    public long getProductId() {
+        return this.productId;
+    }
+
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
+
     public long getDateTime() {
         return this.dateTime;
     }
@@ -83,6 +101,14 @@ public class Statistics implements Parcelable {
 
     public void setSpecial(String special) {
         this.special = special;
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public double getStdPrice() {
@@ -124,11 +150,13 @@ public class Statistics implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this._id);
+        dest.writeLong(this._id);
         dest.writeString(this.shopTitle);
         dest.writeString(this.productTitle);
+        dest.writeLong(this.productId);
         dest.writeLong(this.dateTime);
         dest.writeString(this.special);
+        dest.writeDouble(this.price);
         dest.writeDouble(this.std_price);
         dest.writeDouble(this.disc_price);
         dest.writeDouble(this.old_price);

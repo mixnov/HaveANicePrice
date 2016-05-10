@@ -9,6 +9,8 @@ import java.util.TimeZone;
 
 /**
  * Created by Mikhail on 06.05.2016.
+ *
+ * Class contains the additional methods
  */
 public class Utility {
     public static String longToDate(Long currentTime){
@@ -36,25 +38,35 @@ public class Utility {
         return object;
     }
 
-    public static ArrayList<String> getParseParansList(ArrayList<String> list, Shop shop){
+    public static void getParseParansList(String[] list, Shop shop){
+//        public static ArrayList<String> getParseParansList(ArrayList<String> list, Shop shop){
         //ArrayList<String> list = new ArrayList<>();
         //list = getFields(list, shop);
-        list.add("title");
+//        list.add("title");
+//        //list.add(shop.getTitle());
+//        list.add(shop.getImgUrl());
+//        list.add(shop.getSpecial());
+//        list.add(shop.getStdPrice());
+//        list.add(shop.getDiscPrice());
+//        list.add(shop.getOldPrice());
+//        list.add(shop.getSavePrice());
+
+        list[1] = "title";
         //list.add(shop.getTitle());
-        list.add(shop.getImgUrl());
-        list.add(shop.getSpecial());
-        list.add(shop.getStdPrice());
-        list.add(shop.getDiscPrice());
-        list.add(shop.getOldPrice());
-        list.add(shop.getSavePrice());
-        return list;
+        list[2] = shop.getImgUrl();
+        list[3] = shop.getSpecial();
+        list[4] = shop.getStdPrice();
+        list[5] = shop.getDiscPrice();
+        list[6] = shop.getOldPrice();
+        list[7] = shop.getSavePrice();
     }
 
     public static ArrayList<String> getFields(ArrayList<String> list, Object object){
         Field[] fields = object.getClass().getDeclaredFields();
         String _package =  object.getClass().getPackage().getName();
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
+        for (Field field : fields) {
+//            for (int i = 0; i < fields.length; i++) {
+//            Field field = fields[i];
             String fieldName = field.toString();
             if (!fieldName.contains("private")) continue;
             fieldName = field.getName();

@@ -45,7 +45,7 @@ public class ProductsDAO {
         Cursor cursor = db.rawQuery(selectProducts, null);
 
         int current_id = -1;
-        Product product = null;
+        Product product;
 
         // loop through the results
         if (cursor.moveToFirst()) {
@@ -94,9 +94,8 @@ public class ProductsDAO {
     public static int getProductsByUrl(Context context, String url) {
         String whereClause = " WHERE " + DBHelper.COLUMN_P_URL + " = '" + url + "'";
         ArrayList<Product> products = getProducts(context, whereClause);
-        int count = products.size();
 
-        return count;
+        return products.size();
     }
 
     /**
@@ -119,8 +118,8 @@ public class ProductsDAO {
      * @param product - product for writing to DB
      */
     public static long addProduct(Context context, Product product) {
-        DBHelper dbHandler = new DBHelper(context);
-        SQLiteDatabase db = dbHandler.getWritableDatabase();
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(DBHelper.COLUMN_P_SHOP_ID, product.getShopId());
@@ -129,11 +128,11 @@ public class ProductsDAO {
         values.put(DBHelper.COLUMN_P_IMG_URL, product.getImgUrl());
 
         //insert into db (if id is already there - ignore)
-        long id = db.insertWithOnConflict(DBHelper.TABLE_PRODUCTS, null, values, SQLiteDatabase.CONFLICT_ABORT);
+        long id = db.insert(DBHelper.TABLE_PRODUCTS, null, values);
 
         //close connection
         db.close();
-        dbHandler.close();
+        dbHelper.close();
 
         return id;
     }
@@ -145,8 +144,8 @@ public class ProductsDAO {
      * @param productID - question's id in the database
      */
     static void removeProduct(Context context, int productID) {
-        DBHelper dbHandler = new DBHelper(context);
-        SQLiteDatabase db = dbHandler.getWritableDatabase();
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         String whereClause = DBHelper.COLUMN_ID + "=?";
         String[] whereArgs = new String[]{String.valueOf(productID)};
@@ -156,21 +155,21 @@ public class ProductsDAO {
 
         //close connection
         db.close();
-        dbHandler.close();
+        dbHelper.close();
     }
 
     /**
      * Remove all questions from mistake table
      */
     static void removeAllProducts(Context context) {
-        DBHelper dbHandler = new DBHelper(context);
-        SQLiteDatabase db = dbHandler.getWritableDatabase();
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         // delete all
         db.execSQL("delete from " + DBHelper.TABLE_PRODUCTS);
         // free allocated space
         db.execSQL("vacuum");
         //close connection
         db.close();
-        dbHandler.close();
+        dbHelper.close();
     }
 }

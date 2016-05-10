@@ -37,9 +37,8 @@ public final class ShopsListFragment extends ListFragment{
      */
     public static ShopsListFragment newInstance() {
         Bundle args = new Bundle();
-        ShopsListFragment fragment = new ShopsListFragment();
 
-        return fragment;
+        return new ShopsListFragment();
     }
 
     @Override
@@ -66,7 +65,7 @@ public final class ShopsListFragment extends ListFragment{
     public void onListItemClick(ListView l, View v, int position, long id) {
         // create new question activity with selected category
         Intent shopActivity = new Intent(v.getContext(), ShopActivity.class);
-        int shopId = mShopAdapter.getItem(position).getId();
+        int shopId = (int) mShopAdapter.getItem(position).getId();
         Shop shop = mShops.get(shopId-1);
         shopActivity.putExtra(ShopsActivity.EXTRA_SHOP, shop);
         v.getContext().startActivity(shopActivity);
