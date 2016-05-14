@@ -3,9 +3,9 @@ package nz.co.novozhilov.mikhail.haveaniceprice.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import nz.co.novozhilov.mikhail.haveaniceprice.Shop;
 
@@ -17,23 +17,42 @@ import nz.co.novozhilov.mikhail.haveaniceprice.Shop;
 public class ShopsDAO {
 
     /**
+     * Generate sql query string
+     *
+     * @param filter - filter by shop
+     * @return string of query
+     */
+    static String getShopsQuery(String filter, String addStatement) {
+        return "SELECT " + DBHelper.COLUMN_ID +         //  0
+                ", " + DBHelper.COLUMN_SH_URL +         //  1
+                ", " + DBHelper.COLUMN_SH_TITLE +       //  2
+                ", " + DBHelper.COLUMN_SH_IMG_URL +     //  3
+                ", " + DBHelper.COLUMN_SH_SPECIAL +     //  4
+                ", " + DBHelper.COLUMN_SH_STD_PRICE +   //  5
+                ", " + DBHelper.COLUMN_SH_DISC_PRICE +  //  6
+                ", " + DBHelper.COLUMN_SH_OLD_PRICE +   //  7
+                ", " + DBHelper.COLUMN_SH_SAVE_PRICE +  //  8
+                " FROM " + DBHelper.TABLE_SHOPS +
+                filter + addStatement + " ORDER BY " + DBHelper.COLUMN_SH_TITLE;
+    }
+
+    /**
      * get all Shops
      *
-     * @param context  - App context
+     * @param context - App context
      * @return - The list of Shops
      */
-    public static ArrayList<Shop> getShopsList(Context context) {
+    static ArrayList<Shop> getShops(Context context, String whereClause, String addStatement) {
         // open connection to the database
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // create empty array list for Shops
         ArrayList<Shop> shops = new ArrayList<>();
-        Cursor cursor = db.query(DBHelper.TABLE_SHOPS,
-                new String[]{DBHelper.COLUMN_ID, DBHelper.COLUMN_SH_URL, DBHelper.COLUMN_SH_TITLE,
-                        DBHelper.COLUMN_SH_IMG_URL, DBHelper.COLUMN_SH_SPECIAL, DBHelper.COLUMN_SH_STD_PRICE,
-                        DBHelper.COLUMN_SH_DISC_PRICE, DBHelper.COLUMN_SH_OLD_PRICE, DBHelper.COLUMN_SH_SAVE_PRICE},
-                null, null, null, null, DBHelper.COLUMN_ID);
-        Log.d("SQL", "EXECUTED!");
+        // create custom query to get data from products
+        String selectShops = getShopsQuery(whereClause, addStatement);
+        // execute query
+        Cursor cursor = db.rawQuery(selectShops, null);
+
         // loop through the results
         if (cursor.moveToFirst()) {
             do {
@@ -58,5 +77,44 @@ public class ShopsDAO {
         db.close();
         dbHelper.close();
         return shops;
+    }
+
+    /**
+     * get all Shops
+     *
+     * @param context - App context
+     * @return - The list of Shops
+     */
+    public static ArrayList<Shop> getShopsList(Context context) {
+        return getShops(context, "", "");
+    }
+
+    /**
+     * get Products Shops
+     *
+     * @param context - App context
+     * @return - The list of Shops
+     */
+    public static ArrayList<Shop> getProductsShops(Context context) {
+        return getShops(context, "", "");
+    }
+
+
+    public static Shop getShopById(Context context, long id){
+        String whereClause = " WHERE " + DBHelper.COLUMN_ID + " = " + String.valueOf(id);
+        ArrayList<Shop> shops = getShops(context, whereClause, "");
+
+        return shops.get(0);
+    }
+
+    public static HashMap<Long, Shop> getShopsHashMap(Context context){
+        HashMap<Long, Shop> hm = new HashMap<>();
+        ArrayList<Shop> shops = getShops(context, "", "");
+
+        for(Shop shop : shops) {
+            hm.put(shop.getId(), shop);
+        }
+
+        return hm;
     }
 }

@@ -29,7 +29,7 @@ public class StatisticsDAO {
         //SELECT tsh.title, tp.title, ts.date, ts.special, ts.price, ts.std_price, ts.disc_price, ts.old_price, ts.save_price  FROM stat ts JOIN products tp ON ts.product_id = tp._id JOIN shops tsh ON tp.shop_id = tsh._id
         return "SELECT tst." + DBHelper.COLUMN_ID +         // 0
                 ", tsh." + DBHelper.COLUMN_SH_TITLE +       // 1
-                ", tpr." + DBHelper.COLUMN_P_TITLE +        // 2
+                ", tpr." + DBHelper.COLUMN_PR_TITLE +       // 2
                 ", tst." + DBHelper.COLUMN_ST_PRODUCT_ID +  // 3
                 ", tst." + DBHelper.COLUMN_ST_DATE +        // 4
                 ", tst." + DBHelper.COLUMN_ST_SPECIAL +     // 5
@@ -43,10 +43,10 @@ public class StatisticsDAO {
                 " tpr ON tst." + DBHelper.COLUMN_ST_PRODUCT_ID +
                 " = tpr." + DBHelper.COLUMN_ID +
                 " JOIN " + DBHelper.TABLE_SHOPS +
-                " tsh ON tpr." + DBHelper.COLUMN_P_SHOP_ID +
+                " tsh ON tpr." + DBHelper.COLUMN_PR_SHOP_ID +
                 " = tsh." + DBHelper.COLUMN_ID +
                 productFilter + addStatement +
-                " ORDER BY tsh." + DBHelper.COLUMN_SH_TITLE + ", tpr." + DBHelper.COLUMN_P_TITLE;
+                " ORDER BY tsh." + DBHelper.COLUMN_SH_TITLE + ", tpr." + DBHelper.COLUMN_PR_TITLE;
     }
 
     /**
@@ -67,9 +67,6 @@ public class StatisticsDAO {
         // execute query
         Cursor cursor = db.rawQuery(getStatistics, null);
 
-        long current_id = -1;
-        Statistics statistics;
-
         // loop through the results
         if (cursor.moveToFirst()) {
             do {
@@ -86,7 +83,7 @@ public class StatisticsDAO {
                 Double save_price   = cursor.getDouble(10);
 
                 // create Statistics object
-                statistics = new Statistics(id, shopTitle, productTitle, productId, date,
+                Statistics statistics = new Statistics(id, shopTitle, productTitle, productId, date,
                         special, price, std_price, disc_price, old_price, save_price);
 
                 // add Statistics to the list

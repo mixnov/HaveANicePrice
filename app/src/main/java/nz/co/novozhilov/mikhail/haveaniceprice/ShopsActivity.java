@@ -16,6 +16,15 @@ public class ShopsActivity  extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+//        Intent alarmIntent = new Intent(this, HaveANicePriceService.AlarmReceiver.class);
+//
+//        PendingIntent pi = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+//        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+//        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, pi);
+//         alarmIntent
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shops);
         setTitle("S H O P S");

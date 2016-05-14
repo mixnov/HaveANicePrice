@@ -2,6 +2,7 @@ package nz.co.novozhilov.mikhail.haveaniceprice;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Created by Mikhail on 05.05.2016.
@@ -10,6 +11,7 @@ import android.os.Parcelable;
  *
  */
 public class Statistics implements Parcelable {
+    public static final String LOG_TAG = Statistics.class.getSimpleName();
     private long _id;
     private String shopTitle;
     private String productTitle;
@@ -173,4 +175,21 @@ public class Statistics implements Parcelable {
             return new Shop[size];
         }
     };
+
+    public void print(){
+        Log.v(LOG_TAG, "=================== Statistics ========================");
+        Log.v(LOG_TAG, "_id         = " + String.valueOf(this._id));
+        Log.v(LOG_TAG, "shopTitle   = " + this.shopTitle);
+        Log.v(LOG_TAG, "productTitle= " + this.productTitle);
+        Log.v(LOG_TAG, "productId   = " + String.valueOf(this.productId));
+        Log.v(LOG_TAG, "dateTime    = " + Utility.longToDate(this.dateTime));
+        Log.v(LOG_TAG, "special     = " + this.special);
+        Log.v(LOG_TAG, "price       = " + String.valueOf(this.price));
+        Log.v(LOG_TAG, "std_price   = " + String.valueOf(this.std_price));
+        Log.v(LOG_TAG, "disc_price  = " + String.valueOf(this.disc_price));
+        Log.v(LOG_TAG, "old_price   = " + String.valueOf(this.old_price));
+        Log.v(LOG_TAG, "save_price  = " + String.valueOf(this.save_price));
+        Log.v(LOG_TAG, "");
+    }
 }
+

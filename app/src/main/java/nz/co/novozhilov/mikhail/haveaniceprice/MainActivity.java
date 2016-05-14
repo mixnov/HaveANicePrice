@@ -5,8 +5,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import nz.co.novozhilov.mikhail.haveaniceprice.fargments.MainMenuFragment;
+import nz.co.novozhilov.mikhail.haveaniceprice.sync.HaveANicePriceSyncAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
             //re-create navigation button for fragments after rotation
             placeUpButton();
         }
+        Log.v(LOG_TAG, "onCreate");
 
+        HaveANicePriceSyncAdapter.initializeSyncAdapter(this);
     }
 
     /**

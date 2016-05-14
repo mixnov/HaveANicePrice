@@ -48,8 +48,6 @@ public class ShopActivity extends AppCompatActivity {
     private Product product;
     private Statistics statistics;
 
-    public Elements elements;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,7 +175,7 @@ public class ShopActivity extends AppCompatActivity {
                         product.setTitle(value);
                     } else {
                         String[] paramss = param.split("###");
-                        elements = document.select("." + paramss[0]);
+                        Elements elements = document.select("." + paramss[0]);
                         for (Element element : elements) {
 
                             if (paramss.length > 1) {
@@ -255,6 +253,7 @@ public class ShopActivity extends AppCompatActivity {
                     discount.setText(format.format(disc));
                     price.setTextColor(Color.parseColor("#FF0000"));
                 }
+                product.setTrack(1);
             } else {
                 add.setText("+");
                 add.setEnabled(false);

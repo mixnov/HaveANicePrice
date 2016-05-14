@@ -24,7 +24,7 @@ import java.io.OutputStream;
 public final class DBHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = DBHelper.class.getName();
-    private static Boolean rewrite_db = true;
+    private static Boolean rewrite_db = false;
 //    private static final Boolean REWRITE_DB = false;
     private static final int DB_VERSION = 1; // DB version (used on upgrade)
 //    private static String DB_PATH = "/data/data/";
@@ -44,10 +44,11 @@ public final class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
 
     //  Products table columns
-    public static final String COLUMN_P_SHOP_ID = "shop_id";
-    public static final String COLUMN_P_IMG_URL = "img_url";
-    public static final String COLUMN_P_TITLE = "title";
-    public static final String COLUMN_P_URL = "url";
+    public static final String COLUMN_PR_SHOP_ID = "shop_id";
+    public static final String COLUMN_PR_IMG_URL = "img_url";
+    public static final String COLUMN_PR_TITLE = "title";
+    public static final String COLUMN_PR_URL = "url";
+    public static final String COLUMN_PR_TRACK = "track";
 
     //  Shops table columns
     public static final String COLUMN_SH_TITLE = "_title";
@@ -208,18 +209,29 @@ public final class DBHelper extends SQLiteOpenHelper {
         }
         // получаем путь к SD
         File sdPath = Environment.getExternalStorageDirectory();
-        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
-        boolean res;
+//        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
+//        boolean res;
 //        res = sdPath.mkdirs();
         // добавляем свой каталог к пути
-        String sdFullDBFileName = sdPath.getAbsolutePath() + "/" + DB_NAME;
+        //String sdFullDBFileName = sdPath.getAbsolutePath() + "/" + DB_NAME;
+        String sdFullDBFileName = getSDcardPath() + "/" + DB_NAME;
+
         InputStream myInput;
         OutputStream myOutput;
 //        this.getReadableDatabase();
         // get source and target streams
-        myInput = new FileInputStream(fullDBFileName);
-        myOutput = new FileOutputStream(sdFullDBFileName);
-
+        try {
+            myInput = new FileInputStream(fullDBFileName);
+        } catch (IOException e){
+            Log.v(LOG_TAG, e.toString());
+            return;
+        }
+        try {
+            myOutput = new FileOutputStream(sdFullDBFileName);
+        } catch (IOException e){
+            Log.v(LOG_TAG, e.toString());
+            return;
+        }
         // copy file
         byte[] buffer = new byte[1024];
         int length;
@@ -238,6 +250,7 @@ public final class DBHelper extends SQLiteOpenHelper {
      */
     private String getSDcardPath()
     {
+
         String exts =  Environment.getExternalStorageDirectory().getPath();
         String sdCardPath = null;
         try

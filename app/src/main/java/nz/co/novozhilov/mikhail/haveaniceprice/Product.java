@@ -14,16 +14,18 @@ public class Product implements Parcelable {
     private String url;
     private String title;
     private String img_url;
+    private int track;
 
     public Product() {
     }
 
-    public Product(long _id, long shop_id, String url, String title, String img_url) {
+    public Product(long _id, long shop_id, String url, String title, String img_url, int track) {
         this._id = _id;
         this.shop_id = shop_id;
         this.url = url;
         this.title = title;
         this.img_url = img_url;
+        this.track = track;
     }
 
     public Product(Parcel in) {
@@ -32,6 +34,7 @@ public class Product implements Parcelable {
         this.url = in.readString();
         this.title = in.readString();
         this.img_url = in.readString();
+        this.track = in.readInt();
     }
 
     public long getId() {
@@ -74,6 +77,14 @@ public class Product implements Parcelable {
         this.img_url = img_url;
     }
 
+    public int getTrack() {
+        return this.track;
+    }
+
+    public void setTrack(int track) {
+        this.track = track;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -86,6 +97,7 @@ public class Product implements Parcelable {
         dest.writeString(this.url);
         dest.writeString(this.title);
         dest.writeString(this.img_url);
+        dest.writeInt(this.track);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
