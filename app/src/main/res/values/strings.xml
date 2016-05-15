@@ -21,6 +21,14 @@
         \nEmail:
         \nnovomic@gmail.com
     </string>
-    <string name="content_authority">nz.co.novozhilov.mikhail.haveaniceprice.db</string>
-    <string name="sync_account_type">haveaniceprice.mikhail.novozhilov.co.nz</string>
+    <string name="content_authority">nf.co.novomic.haveaniceprice</string>
+    <string name="sync_account_type">nf.co.novomic.haveaniceprice.sync</string>
+    <string name="general_settings">Settings</string>
+    <string name="sync_settings_summary">Automatic synchronization</string>
+    <string name="sync">Synchronization</string>
+    <string name="prices">Prices</string>
+    <string name="auto_sync_summary">Periodical synchronization</string>
+    <string name="auto_sync">Automatic synchronization</string>
+    <string name="auto_sync_interval">Synchronization interval</string>
+    <string name="settings">Settings</string>
 </resources>

@@ -7,7 +7,7 @@
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
 
     <LinearLayout
@@ -39,7 +39,7 @@
             android:text="@string/main_menu_shops"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#fff"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -49,13 +49,13 @@
         android:layout_height="match_parent"
         android:background="#ffffff">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
 
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
     </ScrollView>
 </LinearLayout>
 

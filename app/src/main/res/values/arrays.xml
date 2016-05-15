@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="auto_sync_intervals">
+        <item>Every minute</item>
+        <item>Every ten minutes</item>
+        <item>Every hour</item>
+        <item>Once at three hours</item>
+        <item>Once a day</item>
+    </string-array>
+
+    <string-array name="auto_sync_interval_values">
+        <item>@string/auto_sync_interval_default</item>
+        <item>600</item>
+        <item>3600</item>
+        <item>10800</item>
+        <item>86400</item>
+    </string-array>
+
+    <string name="auto_sync_interval_default">60</string>
+
+</resources>
