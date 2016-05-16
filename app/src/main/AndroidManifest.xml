@@ -13,6 +13,7 @@
     <application
         android:name=".AppDelegate"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
@@ -99,11 +100,6 @@
                 android:resource="@xml/sync_adapter" />
         </service>
 
-        <service android:name=".services.HaveANicePriceService" />
-
-        <receiver
-            android:name=".services.HaveANicePriceService$AlarmReceiver"
-            android:enabled="true" />
     </application>
 
 </manifest>

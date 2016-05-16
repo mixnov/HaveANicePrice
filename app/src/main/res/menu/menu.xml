@@ -1,11 +1,11 @@
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_prefs"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:showAsAction="ifRoom"
-        android:title="@string/settings"
-        tools:ignore="AppCompatResource" />
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="@string/settings"/>
 
 </menu>

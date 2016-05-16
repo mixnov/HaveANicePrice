@@ -78,7 +78,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 //                    setExtras(new Bundle()).build();
 //            ContentResolver.requestSync(request);
 //        } else {
-            ContentResolver.addPeriodicSync(newAccount, authority, new Bundle(), syncInterval);
+        ContentResolver.addPeriodicSync(newAccount, authority, new Bundle(), syncInterval);
 //        }
     }
 
@@ -236,6 +236,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 //        statistics.setDateTime(System.currentTimeMillis());
         //statisticss.add(statistics);
         statistics.print();
-        StatisticsDAO.addStatistics(context, statistics);
+        if (StatisticsDAO.compare(context, statistics)) {
+            StatisticsDAO.addStatistics(context, statistics);
+        }
     }
 }

@@ -26,15 +26,6 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        Intent alarmIntent = new Intent(getActivity(), HaveANicePriceService.AlarmReceiver.class);
-//
-//        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-//        AlarmManager am = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-//
-//        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+5000, pi);
-//
-//        Intent intent = new Intent(getActivity(), HaveANicePriceService.class);
-//        getActivity().startService(intent);
 
         getActivity().setTitle(R.string.app_name);
 

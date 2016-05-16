@@ -25,7 +25,7 @@ public class StatisticsDAO {
      * @param addStatement - Additional statement
      * @return - The query string
      */
-    static String getStatisticsQuery(String productFilter, String addStatement) {
+    static String getStatisticsQuery(String productFilter, String addStatement, String orderBy) {
         //SELECT tsh.title, tp.title, ts.date, ts.special, ts.price, ts.std_price, ts.disc_price, ts.old_price, ts.save_price  FROM stat ts JOIN products tp ON ts.product_id = tp._id JOIN shops tsh ON tp.shop_id = tsh._id
         return "SELECT tst." + DBHelper.COLUMN_ID +         // 0
                 ", tsh." + DBHelper.COLUMN_SH_TITLE +       // 1
@@ -46,7 +46,7 @@ public class StatisticsDAO {
                 " tsh ON tpr." + DBHelper.COLUMN_PR_SHOP_ID +
                 " = tsh." + DBHelper.COLUMN_ID +
                 productFilter + addStatement +
-                " ORDER BY tsh." + DBHelper.COLUMN_SH_TITLE + ", tpr." + DBHelper.COLUMN_PR_TITLE;
+                " ORDER BY " + ((orderBy.isEmpty()) ? "tsh." + DBHelper.COLUMN_SH_TITLE + ", tpr." + DBHelper.COLUMN_PR_TITLE : orderBy);
     }
 
     /**
@@ -56,14 +56,15 @@ public class StatisticsDAO {
      * @param addStatement - The additional statement for the query
      * @return - The list of Statistics objects
      */
-    public static ArrayList<Statistics> getStatistics(Context context, String whereClause, String addStatement) {
+    public static ArrayList<Statistics> getStatistics(Context context, String whereClause,
+                                                      String addStatement, String orderBy) {
         // open connection to the database
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // create empty array list for Statistics
         ArrayList<Statistics> statisticsList = new ArrayList<>();
         // create custom query to get data from Statistics
-        String getStatistics = getStatisticsQuery(whereClause, addStatement);
+        String getStatistics = getStatisticsQuery(whereClause, addStatement, orderBy);
         // execute query
         Cursor cursor = db.rawQuery(getStatistics, null);
 
@@ -107,7 +108,7 @@ public class StatisticsDAO {
      */
     public static ArrayList<Statistics> getStatisticsByShop(Context context, long shopId) {
         String whereClause = " WHERE tsh." + DBHelper.COLUMN_ID + " = " + String.valueOf(shopId);
-        return getStatistics(context, whereClause, "");
+        return getStatistics(context, whereClause, "", "");
     }
 
     /**
@@ -119,7 +120,20 @@ public class StatisticsDAO {
      */
     public static ArrayList<Statistics> getStatisticsByProduct(Context context, long productId) {
         String whereClause = " WHERE tpr." + DBHelper.COLUMN_ID + " = " + String.valueOf(productId);
-        return getStatistics(context, whereClause, "");
+        return getStatistics(context, whereClause, "", "");
+    }
+
+    /**
+     * get Statistics by Product
+     *
+     * @param context  - app context
+     * @param productId - ID of the product
+     * @return list of Statistics records
+     */
+    public static Statistics getLastStatisticsByProduct(Context context, long productId) {
+        String whereClause = " WHERE tpr." + DBHelper.COLUMN_ID + " = " + String.valueOf(productId);
+        String orderBy = " date desc limit 1";
+        return getStatistics(context, whereClause, "", orderBy).get(0);
     }
 
     /**
@@ -216,4 +230,13 @@ public class StatisticsDAO {
         dbHelper.close();
     }
 
+    public static boolean compare(Context context, Statistics stat){
+        boolean result;
+        Statistics stat1 = getLastStatisticsByProduct(context, stat.getProductId());
+        result = (stat.getPrice()==stat1.getPrice() && stat.getDiscPrice()==stat1.getDiscPrice() &&
+                stat.getStdPrice()==stat1.getStdPrice() && stat.getSpecial().equals(stat1.getSpecial()));
+
+        return result;
+
+    }
 }
