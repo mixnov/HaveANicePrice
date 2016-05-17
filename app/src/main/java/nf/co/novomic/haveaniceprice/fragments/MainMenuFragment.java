@@ -54,6 +54,7 @@ public class MainMenuFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_main_shops:
                 Intent shopsActivity = new Intent(v.getContext(), ShopsActivity.class);
+//                Intent shopsActivity = new Intent(v.getContext(), ProductsActivity.class);
                 v.getContext().startActivity(shopsActivity);
 
                 break;

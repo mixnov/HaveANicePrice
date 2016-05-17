@@ -26,10 +26,9 @@
             android:id="@+id/iv_pic"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/briscoes"
-            />
+            tools:src="@drawable/briscoes"
+            android:contentDescription="@string/shop_image"/>
 
             <!--android:src="@drawable/farmers"-->
 

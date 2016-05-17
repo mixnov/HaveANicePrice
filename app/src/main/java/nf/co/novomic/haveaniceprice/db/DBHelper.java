@@ -24,7 +24,7 @@ import java.io.OutputStream;
 public final class DBHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = DBHelper.class.getName();
-    //    private static Boolean rewrite_db = true;
+//        private static Boolean rewrite_db = true;
     private static Boolean rewrite_db = false;
     private static final int DB_VERSION = 1; // DB version (used on upgrade)
 //    private static String DB_PATH = "/data/data/";
@@ -49,6 +49,13 @@ public final class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PR_TITLE = "title";
     public static final String COLUMN_PR_URL = "url";
     public static final String COLUMN_PR_TRACK = "track";
+    public static final String COLUMN_PR_SPECIAL = "special";
+    public static final String COLUMN_PR_PRICE = "price";
+    public static final String COLUMN_PR_STD_PRICE = "std_price";
+    public static final String COLUMN_PR_MIN_PRICE = "min_price";
+    public static final String COLUMN_PR_MAX_PRICE = "max_price";
+    public static final String COLUMN_PR_DISC_PRICE = "disc_price";
+    public static final String COLUMN_PR_OLD_PRICE = "old_price";
 
     //  Shops table columns
     public static final String COLUMN_SH_TITLE = "_title";

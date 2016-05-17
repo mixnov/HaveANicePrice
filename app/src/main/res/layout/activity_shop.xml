@@ -18,7 +18,7 @@
             android:id="@+id/btnAdd"
             android:layout_width="31dp"
             android:layout_height="match_parent"
-            android:text="+" />
+            android:text="@string/plus" />
 
         <LinearLayout
             android:layout_width="85dp"
@@ -29,6 +29,7 @@
 
             <TextView
                 android:id="@+id/txtPrice"
+                android:text="@string/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -37,6 +38,7 @@
 
             <TextView
                 android:id="@+id/txtStdPrice"
+                android:text="@string/std_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -45,6 +47,7 @@
 
             <TextView
                 android:id="@+id/txtVDiscount"
+                android:text="@string/discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -72,7 +75,9 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:focusable="false"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:inputType="textWebEditText"
+                android:hint="@string/hint"/>
         </LinearLayout>
 
     </LinearLayout>

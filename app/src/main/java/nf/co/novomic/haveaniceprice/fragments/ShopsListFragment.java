@@ -14,9 +14,12 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import nf.co.novomic.haveaniceprice.R;
-import nf.co.novomic.haveaniceprice.classes.Shop;
+import nf.co.novomic.haveaniceprice.activity.ProductsActivity;
 import nf.co.novomic.haveaniceprice.activity.ShopActivity;
 import nf.co.novomic.haveaniceprice.activity.ShopsActivity;
+import nf.co.novomic.haveaniceprice.classes.Product;
+import nf.co.novomic.haveaniceprice.classes.Shop;
+import nf.co.novomic.haveaniceprice.db.ProductsDAO;
 import nf.co.novomic.haveaniceprice.db.ShopsDAO;
 
 
@@ -25,7 +28,7 @@ import nf.co.novomic.haveaniceprice.db.ShopsDAO;
  *
  * @author Mikhail Novozhilov novomic@gmail.com
  */
-public final class ShopsListFragment extends ListFragment{
+public final class ShopsListFragment extends ListFragment {
 
     private ArrayList<Shop> mShops;
     private ShopAdapter mShopAdapter;
@@ -64,11 +67,18 @@ public final class ShopsListFragment extends ListFragment{
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // create new Shops activity
-        Intent shopActivity = new Intent(v.getContext(), ShopActivity.class);
-        int shopId = (int) mShopAdapter.getItem(position).getId();
-        Shop shop = mShops.get(shopId-1);
-        shopActivity.putExtra(ShopsActivity.EXTRA_SHOP, shop);
-        v.getContext().startActivity(shopActivity);
+//        int shopId = (int) mShopAdapter.getItem(position).getId();
+        Shop shop = mShops.get((int) id);
+        ArrayList<Product> pList = ProductsDAO.getProductsByShop(v.getContext(), shop.getId());
+        Intent nextActivity;
+        if (pList.size() == 0) {
+            nextActivity = new Intent(v.getContext(), ShopActivity.class);
+            nextActivity.putExtra(ShopsActivity.EXTRA_SHOP, shop);
+        } else {
+            nextActivity = new Intent(v.getContext(), ProductsActivity.class);
+            nextActivity.putExtra(ProductsActivity.EXTRA_SHOP, shop);
+        }
+        v.getContext().startActivity(nextActivity);
     }
 
     /**
@@ -104,11 +114,10 @@ public final class ShopsListFragment extends ListFragment{
     private class ShopAdapter extends ArrayAdapter<Shop> {
 
         /**
-         *
          * @param shops - The Object for the adapter
          */
         public ShopAdapter(ArrayList<Shop> shops) {
-            super(getActivity(), R.layout.menu_list_item, shops);
+            super(getActivity(), R.layout.shops_list_item, shops);
         }
 
         @Override
@@ -117,7 +126,7 @@ public final class ShopsListFragment extends ListFragment{
             // If we get view, then fill it
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.menu_list_item,parent,false);
+                        .inflate(R.layout.shops_list_item, parent, false);
             }
             // Set view for Shop object
             Shop c = getItem(position);

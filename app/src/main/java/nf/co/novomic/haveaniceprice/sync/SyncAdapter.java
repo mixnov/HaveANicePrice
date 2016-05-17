@@ -183,6 +183,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         statisticss = new ArrayList<>();
         Shop shop = shops.get(product.getShopId());
         try {
+            double valueDouble;
             String param = params[0];
             document = Jsoup.connect(param).get();
             for (int i = 1; i < params.length; i++) {
@@ -198,23 +199,33 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                             if (!value.isEmpty()) {
                                 if (param.equals(shop.getSpecial())) {
                                     statistics.setSpecial(value);
+                                    product.setSpecial(value);
                                 }
 
                                 if (param.equals(shop.getStdPrice())) {
-                                    value = Utility.onlyNumbers(value);
-                                    statistics.setStdPrice(Double.parseDouble(value));
-                                    statistics.setPrice(Double.parseDouble(value));
+                                    valueDouble = Double.parseDouble(Utility.onlyNumbers(value));
+                                    statistics.setStdPrice(valueDouble);
+                                    statistics.setPrice(valueDouble);
+                                    product.setStdPrice(valueDouble);
+                                    product.setPrice(valueDouble);
+                                    setMinMaxPrice(product, valueDouble);
                                 }
 
                                 if (param.equals(shop.getDiscPrice())) {
-                                    value = Utility.onlyNumbers(value);
-                                    statistics.setDiscPrice(Double.parseDouble(value));
-                                    statistics.setPrice(Double.parseDouble(value));
+                                    valueDouble = Double.parseDouble(Utility.onlyNumbers(value));
+                                    statistics.setDiscPrice(valueDouble);
+                                    statistics.setPrice(valueDouble);
+                                    product.setDiscPrice(valueDouble);
+                                    product.setPrice(valueDouble);
+                                    setMinMaxPrice(product, valueDouble);
                                 }
 
                                 if (param.equals(shop.getOldPrice())) {
-                                    value = Utility.onlyNumbers(value);
-                                    statistics.setOldPrice(Double.parseDouble(value));
+                                    valueDouble = Double.parseDouble(Utility.onlyNumbers(value));
+                                    statistics.setOldPrice(valueDouble);
+                                    product.setOldPrice(valueDouble);
+                                    product.setStdPrice(valueDouble);
+                                    setMinMaxPrice(product, valueDouble);
                                 }
 
                                 if (param.equals(shop.getSavePrice())) {
@@ -236,8 +247,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 //        statistics.setDateTime(System.currentTimeMillis());
         //statisticss.add(statistics);
         statistics.print();
-        if (StatisticsDAO.compare(context, statistics)) {
+        if (!StatisticsDAO.compare(context, statistics)) {
             StatisticsDAO.addStatistics(context, statistics);
+            ProductsDAO.updateProduct(context, product);
         }
+    }
+
+    private static void setMinMaxPrice(Product product, double valueDouble){
+        if (valueDouble < product.getMinPrice()) product.setMinPrice(valueDouble);
+        if (valueDouble > product.getMaxPrice()) product.setMaxPrice(valueDouble);
     }
 }

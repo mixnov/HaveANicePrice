@@ -26,12 +26,19 @@ public class ProductsDAO {
      * @return string of query
      */
     static String getProductsQuery(String filter, String addStatement) {
-        return "SELECT " + DBHelper.COLUMN_ID +     //  0
-                ", " + DBHelper.COLUMN_PR_SHOP_ID + //  1
-                ", " + DBHelper.COLUMN_PR_URL +     //  2
-                ", " + DBHelper.COLUMN_PR_TITLE +   //  3
-                ", " + DBHelper.COLUMN_PR_IMG_URL + //  4
-                ", " + DBHelper.COLUMN_PR_TRACK + //  5
+        return "SELECT " + DBHelper.COLUMN_ID +         //  0
+                ", " + DBHelper.COLUMN_PR_SHOP_ID +     //  1
+                ", " + DBHelper.COLUMN_PR_URL +         //  2
+                ", " + DBHelper.COLUMN_PR_TITLE +       //  3
+                ", " + DBHelper.COLUMN_PR_IMG_URL +     //  4
+                ", " + DBHelper.COLUMN_PR_TRACK +       //  5
+                ", " + DBHelper.COLUMN_PR_SPECIAL +     //  6
+                ", " + DBHelper.COLUMN_PR_PRICE +       //  7
+                ", " + DBHelper.COLUMN_PR_STD_PRICE +   //  8
+                ", " + DBHelper.COLUMN_PR_MIN_PRICE +   //  9
+                ", " + DBHelper.COLUMN_PR_MAX_PRICE +   // 10
+                ", " + DBHelper.COLUMN_PR_DISC_PRICE +  // 11
+                ", " + DBHelper.COLUMN_PR_OLD_PRICE +   // 12
                 " FROM " + DBHelper.TABLE_PRODUCTS +
                 filter + addStatement + " ORDER BY " + DBHelper.COLUMN_PR_TITLE;
     }
@@ -43,15 +50,23 @@ public class ProductsDAO {
      * @return string of query
      */
     static String getProductsWithShopsQuery(String filter, String addStatement) {
-        return "SELECT " + DBHelper.COLUMN_ID +     //  0
-                ", " + DBHelper.COLUMN_PR_SHOP_ID + //  1
-                ", " + DBHelper.COLUMN_PR_URL +     //  2
-                ", " + DBHelper.COLUMN_PR_TITLE +   //  3
-                ", " + DBHelper.COLUMN_PR_IMG_URL + //  4
-                ", " + DBHelper.COLUMN_PR_TRACK + //  5
+        return "SELECT " + DBHelper.COLUMN_ID +         //  0
+                ", " + DBHelper.COLUMN_PR_SHOP_ID +     //  1
+                ", " + DBHelper.COLUMN_PR_URL +         //  2
+                ", " + DBHelper.COLUMN_PR_TITLE +       //  3
+                ", " + DBHelper.COLUMN_PR_IMG_URL +     //  4
+                ", " + DBHelper.COLUMN_PR_TRACK +       //  5
+                ", " + DBHelper.COLUMN_PR_SPECIAL +     //  6
+                ", " + DBHelper.COLUMN_PR_PRICE +       //  7
+                ", " + DBHelper.COLUMN_PR_STD_PRICE +   //  8
+                ", " + DBHelper.COLUMN_PR_MIN_PRICE +   //  9
+                ", " + DBHelper.COLUMN_PR_MAX_PRICE +   // 10
+                ", " + DBHelper.COLUMN_PR_DISC_PRICE +  // 11
+                ", " + DBHelper.COLUMN_PR_OLD_PRICE +   // 12
                 " FROM " + DBHelper.TABLE_PRODUCTS +
                 filter + addStatement + " ORDER BY " + DBHelper.COLUMN_PR_TITLE;
     }
+
     /**
      * @param context     - App context
      * @param whereClause - The where clause of the query
@@ -74,15 +89,23 @@ public class ProductsDAO {
         if (cursor.moveToFirst()) {
             do {
 
-                long pId = cursor.getLong(0);
-                long pShopId = cursor.getLong(1);
-                String pUrl = cursor.getString(2);
-                String pTitle = cursor.getString(3);
-                String pImgUrl = cursor.getString(4);
-                int pTrack = cursor.getInt(5);
+                long pId            = cursor.getLong(0);
+                long pShopId        = cursor.getLong(1);
+                String pUrl         = cursor.getString(2);
+                String pTitle       = cursor.getString(3);
+                String pImgUrl      = cursor.getString(4);
+                int pTrack          = cursor.getInt(5);
+                String special      = cursor.getString(6);
+                Double price        = cursor.getDouble(7);
+                Double std_price    = cursor.getDouble(8);
+                Double min_price   = cursor.getDouble(9);
+                Double max_price   = cursor.getDouble(10);
+                Double disc_price   = cursor.getDouble(11);
+                Double old_price    = cursor.getDouble(12);
 
                 // create product
-                Product product = new Product(pId, pShopId, pUrl, pTitle, pImgUrl, pTrack);
+                Product product = new Product(pId, pShopId, pUrl, pTitle, pImgUrl, pTrack, special,
+                        price, std_price, min_price, max_price, disc_price, old_price);
 
                 // add product to the products list
                 products.add(product);
@@ -113,8 +136,31 @@ public class ProductsDAO {
      * @param context - app context
      * @return list of Products
      */
+    public static ArrayList<Product> getProductsByShop(Context context, long shopId) {
+        String whereClause = " WHERE " + DBHelper.COLUMN_PR_SHOP_ID + " = '" + String.valueOf(shopId) + "'";
+        return getProducts(context, whereClause, "");
+    }
+
+    /**
+     * get Tracked Products
+     *
+     * @param context - app context
+     * @return list of Products
+     */
     public static ArrayList<Product> getTrackedProducts(Context context) {
         String whereClause = " WHERE " + DBHelper.COLUMN_PR_TRACK + " = 1 ";
+        return getProducts(context, whereClause, "");
+    }
+
+    /**
+     * get Tracked Products
+     *
+     * @param context - app context
+     * @return list of Products
+     */
+    public static ArrayList<Product> getTrackedProductsByShop(Context context, long shopId) {
+        String whereClause = " WHERE " + DBHelper.COLUMN_PR_TRACK + " = 1 AND " +
+                DBHelper.COLUMN_PR_SHOP_ID + " = '" + String.valueOf(shopId) + "'";
         return getProducts(context, whereClause, "");
     }
 
@@ -172,6 +218,13 @@ public class ProductsDAO {
         values.put(DBHelper.COLUMN_PR_TITLE, product.getTitle());
         values.put(DBHelper.COLUMN_PR_IMG_URL, product.getImgUrl());
         values.put(DBHelper.COLUMN_PR_TRACK, product.getTrack());
+        values.put(DBHelper.COLUMN_PR_SPECIAL, product.getSpecial());
+        values.put(DBHelper.COLUMN_PR_PRICE, product.getPrice());
+        values.put(DBHelper.COLUMN_PR_STD_PRICE, product.getStdPrice());
+        values.put(DBHelper.COLUMN_PR_MIN_PRICE, product.getMinPrice());
+        values.put(DBHelper.COLUMN_PR_MAX_PRICE, product.getMaxPrice());
+        values.put(DBHelper.COLUMN_PR_DISC_PRICE, product.getDiscPrice());
+        values.put(DBHelper.COLUMN_PR_OLD_PRICE, product.getOldPrice());
 
         //insert into db
         long id = db.insert(DBHelper.TABLE_PRODUCTS, null, values);
@@ -183,6 +236,41 @@ public class ProductsDAO {
         return id;
     }
 
+
+    /**
+     * Add Product in the table
+     *
+     * @param product - product for writing to DB
+     */
+    public static long updateProduct(Context context, Product product){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COLUMN_PR_SHOP_ID, product.getShopId());
+        values.put(DBHelper.COLUMN_PR_URL, product.getUrl());
+        values.put(DBHelper.COLUMN_PR_TITLE, product.getTitle());
+        values.put(DBHelper.COLUMN_PR_IMG_URL, product.getImgUrl());
+        values.put(DBHelper.COLUMN_PR_TRACK, product.getTrack());
+        values.put(DBHelper.COLUMN_PR_SPECIAL, product.getSpecial());
+        values.put(DBHelper.COLUMN_PR_PRICE, product.getPrice());
+        values.put(DBHelper.COLUMN_PR_STD_PRICE, product.getStdPrice());
+        values.put(DBHelper.COLUMN_PR_MIN_PRICE, product.getMinPrice());
+        values.put(DBHelper.COLUMN_PR_MAX_PRICE, product.getMaxPrice());
+        values.put(DBHelper.COLUMN_PR_DISC_PRICE, product.getDiscPrice());
+        values.put(DBHelper.COLUMN_PR_OLD_PRICE, product.getOldPrice());
+
+        String[] whereArgs = new String[]{
+                String.valueOf(product.getId())};
+        //insert into db
+        long id = db.update (DBHelper.TABLE_PRODUCTS, values, "_id = '?'", whereArgs);
+
+        //close connection
+        db.close();
+        dbHelper.close();
+
+        return id;
+    }
 
     /**
      * Remove Product by ID

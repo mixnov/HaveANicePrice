@@ -15,17 +15,34 @@ public class Product implements Parcelable {
     private String title;
     private String img_url;
     private int track;
+    private String special;
+    private double price;
+    private double std_price;
+    private double min_price;
+    private double max_price;
+    private double disc_price;
+    private double old_price;
 
     public Product() {
     }
 
-    public Product(long _id, long shop_id, String url, String title, String img_url, int track) {
+    public Product(long _id, long shop_id, String url, String title, String img_url, int track,
+                   String special, double price, double std_price, double min_price, double max_price,
+                   double disc_price, double old_price) {
         this._id = _id;
         this.shop_id = shop_id;
         this.url = url;
         this.title = title;
         this.img_url = img_url;
         this.track = track;
+        this.special = special;
+        this.price = price;
+        this.std_price = std_price;
+        this.min_price = min_price;
+        this.max_price = max_price;
+        this.disc_price = disc_price;
+        this.old_price = old_price;
+
     }
 
     public Product(Parcel in) {
@@ -35,6 +52,13 @@ public class Product implements Parcelable {
         this.title = in.readString();
         this.img_url = in.readString();
         this.track = in.readInt();
+        this.special = in.readString();
+        this.price = in.readDouble();
+        this.std_price = in.readDouble();
+        this.min_price = in.readDouble();
+        this.max_price = in.readDouble();
+        this.disc_price = in.readDouble();
+        this.old_price = in.readDouble();
     }
 
     public long getId() {
@@ -85,6 +109,62 @@ public class Product implements Parcelable {
         this.track = track;
     }
 
+    public String getSpecial() {
+        return this.special;
+    }
+
+    public void setSpecial(String special) {
+        this.special = special;
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getStdPrice() {
+        return this.std_price;
+    }
+
+    public void setStdPrice(double std_price) {
+        this.std_price = std_price;
+    }
+
+    public double getMinPrice() {
+        return this.min_price;
+    }
+
+    public void setMinPrice(double min_price) {
+        this.min_price = min_price;
+    }
+
+    public double getMaxPrice() {
+        return this.max_price;
+    }
+
+    public void setMaxPrice(double max_price) {
+        this.max_price = max_price;
+    }
+
+    public double getOldPrice() {
+        return this.old_price;
+    }
+
+    public void setOldPrice(double old_price) {
+        this.old_price = old_price;
+    }
+
+    public double getDiscPrice() {
+        return this.disc_price;
+    }
+
+    public void setDiscPrice(double disc_price) {
+        this.disc_price = disc_price;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -98,6 +178,13 @@ public class Product implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.img_url);
         dest.writeInt(this.track);
+        dest.writeString(this.special);
+        dest.writeDouble(this.price);
+        dest.writeDouble(this.std_price);
+        dest.writeDouble(this.min_price);
+        dest.writeDouble(this.max_price);
+        dest.writeDouble(this.disc_price);
+        dest.writeDouble(this.old_price);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
