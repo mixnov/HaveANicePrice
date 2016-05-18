@@ -24,7 +24,7 @@ import java.io.OutputStream;
 public final class DBHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = DBHelper.class.getName();
-//        private static Boolean rewrite_db = true;
+//    private static Boolean rewrite_db = true;
     private static Boolean rewrite_db = false;
     private static final int DB_VERSION = 1; // DB version (used on upgrade)
 //    private static String DB_PATH = "/data/data/";
@@ -215,10 +215,13 @@ public final class DBHelper extends SQLiteOpenHelper {
             return;
         }
         // получаем путь к SD
-        File sdPath = Environment.getExternalStorageDirectory();
-        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
-        //boolean res;
-        //res = sdPath.mkdirs();
+//        File sdPath = Environment.getExternalStorageDirectory();
+//        sdPath = new File(sdPath.getAbsolutePath() + "/" + DIR_SD);
+        File sdPath = new File("/storage/extSdCard/" + DIR_SD);
+//        boolean res; //storage/extSdCard
+//        res = sdPath.mkdir();
+//        res = sdPath.mkdirs();
+        //sdPath.createNewFile();
         // добавляем свой каталог к пути
         String sdFullDBFileName = sdPath.getAbsolutePath() + "/" + DB_NAME;
 //        String sdFullDBFileName = getSDcardPath() + "/" + DB_NAME;

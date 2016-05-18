@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import nf.co.novomic.haveaniceprice.classes.Product;
+import nf.co.novomic.haveaniceprice.classes.Utility;
 
 /**
  * Data access methods for Products entities
@@ -214,11 +215,11 @@ public class ProductsDAO {
 
         ContentValues values = new ContentValues();
         values.put(DBHelper.COLUMN_PR_SHOP_ID, product.getShopId());
-        values.put(DBHelper.COLUMN_PR_URL, product.getUrl());
-        values.put(DBHelper.COLUMN_PR_TITLE, product.getTitle());
-        values.put(DBHelper.COLUMN_PR_IMG_URL, product.getImgUrl());
+        values.put(DBHelper.COLUMN_PR_URL, Utility.notNull(product.getUrl()));
+        values.put(DBHelper.COLUMN_PR_TITLE, Utility.notNull(product.getTitle()));
+        values.put(DBHelper.COLUMN_PR_IMG_URL, Utility.notNull(product.getImgUrl()));
         values.put(DBHelper.COLUMN_PR_TRACK, product.getTrack());
-        values.put(DBHelper.COLUMN_PR_SPECIAL, product.getSpecial());
+        values.put(DBHelper.COLUMN_PR_SPECIAL, Utility.notNull(product.getSpecial()));
         values.put(DBHelper.COLUMN_PR_PRICE, product.getPrice());
         values.put(DBHelper.COLUMN_PR_STD_PRICE, product.getStdPrice());
         values.put(DBHelper.COLUMN_PR_MIN_PRICE, product.getMinPrice());
@@ -248,11 +249,11 @@ public class ProductsDAO {
 
         ContentValues values = new ContentValues();
         values.put(DBHelper.COLUMN_PR_SHOP_ID, product.getShopId());
-        values.put(DBHelper.COLUMN_PR_URL, product.getUrl());
-        values.put(DBHelper.COLUMN_PR_TITLE, product.getTitle());
-        values.put(DBHelper.COLUMN_PR_IMG_URL, product.getImgUrl());
+        values.put(DBHelper.COLUMN_PR_URL, Utility.notNull(product.getUrl()));
+        values.put(DBHelper.COLUMN_PR_TITLE, Utility.notNull(product.getTitle()));
+        values.put(DBHelper.COLUMN_PR_IMG_URL, Utility.notNull(product.getImgUrl()));
         values.put(DBHelper.COLUMN_PR_TRACK, product.getTrack());
-        values.put(DBHelper.COLUMN_PR_SPECIAL, product.getSpecial());
+        values.put(DBHelper.COLUMN_PR_SPECIAL, Utility.notNull(product.getSpecial()));
         values.put(DBHelper.COLUMN_PR_PRICE, product.getPrice());
         values.put(DBHelper.COLUMN_PR_STD_PRICE, product.getStdPrice());
         values.put(DBHelper.COLUMN_PR_MIN_PRICE, product.getMinPrice());
@@ -260,10 +261,9 @@ public class ProductsDAO {
         values.put(DBHelper.COLUMN_PR_DISC_PRICE, product.getDiscPrice());
         values.put(DBHelper.COLUMN_PR_OLD_PRICE, product.getOldPrice());
 
-        String[] whereArgs = new String[]{
-                String.valueOf(product.getId())};
+        String[] whereArgs = {String.valueOf(product.getId())};
         //insert into db
-        long id = db.update (DBHelper.TABLE_PRODUCTS, values, "_id = '?'", whereArgs);
+        long id = db.update (DBHelper.TABLE_PRODUCTS, values, "_id = ?", whereArgs);
 
         //close connection
         db.close();

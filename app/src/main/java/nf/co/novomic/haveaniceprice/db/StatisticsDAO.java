@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
 import nf.co.novomic.haveaniceprice.classes.Statistics;
+import nf.co.novomic.haveaniceprice.classes.Utility;
 
 /**
  * Created by Mikhail on 04.05.2016.
@@ -150,7 +151,7 @@ public class StatisticsDAO {
         values.put(DBHelper.COLUMN_ST_PRODUCT_ID, statistics.getProductId());
 
         values.put(DBHelper.COLUMN_ST_DATE, System.currentTimeMillis());
-        values.put(DBHelper.COLUMN_ST_SPECIAL, statistics.getSpecial());
+        values.put(DBHelper.COLUMN_ST_SPECIAL, Utility.notNull(statistics.getSpecial()));
         values.put(DBHelper.COLUMN_ST_PRICE, statistics.getPrice());
         values.put(DBHelper.COLUMN_ST_STD_PRICE, statistics.getStdPrice());
         values.put(DBHelper.COLUMN_ST_DISC_PRICE, statistics.getDiscPrice());

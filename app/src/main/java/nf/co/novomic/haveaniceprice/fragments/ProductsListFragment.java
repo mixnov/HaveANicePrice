@@ -89,6 +89,9 @@ public class ProductsListFragment extends ListFragment {
         protected Void doInBackground(Long... shopsId) {
             long shopId = shopsId[0];
             mProducts = ProductsDAO.getProductsByShop(getActivity(), shopId);
+//            for(Product product: mProducts){
+//                ProductsDAO.updateProduct(getActivity(), product);
+//            }
             return null;
         }
 
@@ -166,13 +169,6 @@ public class ProductsListFragment extends ListFragment {
             txtView.setText(formatVal.format(product.getMinPrice()));
             txtView = (TextView) convertView.findViewById(R.id.txtPriceMax);
             txtView.setText(formatVal.format(product.getMaxPrice()));
-//            drawTitle = drawTitle.replaceAll(" ", "");
-//            int resID = getResources().getIdentifier(drawTitle, "drawable", getActivity().getPackageName());
-//            if (resID > 0) {
-//                //add image if found
-//                ImageView itemImage = (ImageView) convertView.findViewById(R.id.iv_pic);
-//                itemImage.setImageResource(resID);
-//            }
 
             return convertView;
         }

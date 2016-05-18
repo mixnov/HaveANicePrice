@@ -17,11 +17,12 @@
 package nf.co.novomic.haveaniceprice.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import nf.co.novomic.haveaniceprice.R;
-import nf.co.novomic.haveaniceprice.fragments.SyncSettings;
+import nf.co.novomic.haveaniceprice.fragments.SyncSettingsFragment;
 
 /**
  * @author Daniel Serdyukov
@@ -32,11 +33,13 @@ public class SyncSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState == null) {
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.mmf, new SyncSettings())
+                    .add(R.id.mmf, new SyncSettingsFragment())
                     .commit();
         }
     }

@@ -45,6 +45,15 @@ public class Product implements Parcelable {
 
     }
 
+    public Product(long _id, long shop_id, String url, int track, double min_price, double max_price) {
+        this._id = _id;
+        this.shop_id = shop_id;
+        this.url = url;
+        this.track = track;
+        this.min_price = min_price;
+        this.max_price = max_price;
+    }
+
     public Product(Parcel in) {
         this._id = in.readLong();
         this.shop_id = in.readLong();

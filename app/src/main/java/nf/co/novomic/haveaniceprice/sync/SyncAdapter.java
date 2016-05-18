@@ -13,14 +13,16 @@ import android.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
-import nf.co.novomic.haveaniceprice.classes.Product;
 import nf.co.novomic.haveaniceprice.R;
+import nf.co.novomic.haveaniceprice.classes.Product;
 import nf.co.novomic.haveaniceprice.classes.Shop;
 import nf.co.novomic.haveaniceprice.classes.Statistics;
 import nf.co.novomic.haveaniceprice.classes.Utility;
@@ -176,6 +178,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      */
     private static void parseProductPage(Context context, Product product, String... params) {
 
+        try {
+            TimeUnit.SECONDS.sleep(7);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Product newProduct = Utility.copyObject(product);
 
         Log.v(LOG_TAG, String.valueOf(product.getShopId()));
         Document document;
@@ -189,43 +197,59 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             for (int i = 1; i < params.length; i++) {
                 param = params[i];
                 String value;
-                if (!param.equals("title")) {
+                if (param.equals("title")) {
+                    value = document.title();
+                    if (value.contains(" - ")) value = value.substring(0, value.indexOf(" - "));
+                    newProduct.setTitle(value);
+                } else {
                     String[] paramss = param.split("###");
                     Elements elements = document.select("." + paramss[0]);
                     for (Element element : elements) {
 
-                        if (paramss.length == 1) {
+                        if (paramss.length > 1) {
+                            for (Node childNode : element.childNodes()) {
+
+                                value = childNode.absUrl(paramss[1]);
+                                if (!value.isEmpty()) {
+                                    newProduct.setImgUrl(value);
+                                }
+                                value = childNode.absUrl(paramss[2]);
+                                if (!value.isEmpty()) {
+                                    newProduct.setTitle(value);
+                                }
+                            }
+                        } else {
                             value = element.text();
                             if (!value.isEmpty()) {
                                 if (param.equals(shop.getSpecial())) {
                                     statistics.setSpecial(value);
-                                    product.setSpecial(value);
+                                    newProduct.setSpecial(value);
                                 }
 
                                 if (param.equals(shop.getStdPrice())) {
                                     valueDouble = Double.parseDouble(Utility.onlyNumbers(value));
                                     statistics.setStdPrice(valueDouble);
                                     statistics.setPrice(valueDouble);
-                                    product.setStdPrice(valueDouble);
-                                    product.setPrice(valueDouble);
-                                    setMinMaxPrice(product, valueDouble);
+                                    newProduct.setStdPrice(valueDouble);
+                                    newProduct.setPrice(valueDouble);
+                                    setMinMaxPrice(newProduct, valueDouble);
                                 }
 
                                 if (param.equals(shop.getDiscPrice())) {
                                     valueDouble = Double.parseDouble(Utility.onlyNumbers(value));
                                     statistics.setDiscPrice(valueDouble);
                                     statistics.setPrice(valueDouble);
-                                    product.setDiscPrice(valueDouble);
-                                    product.setPrice(valueDouble);
-                                    setMinMaxPrice(product, valueDouble);
+                                    newProduct.setDiscPrice(valueDouble);
+                                    newProduct.setPrice(valueDouble);
+                                    setMinMaxPrice(newProduct, valueDouble);
                                 }
 
                                 if (param.equals(shop.getOldPrice())) {
                                     valueDouble = Double.parseDouble(Utility.onlyNumbers(value));
                                     statistics.setOldPrice(valueDouble);
-                                    product.setOldPrice(valueDouble);
-                                    product.setStdPrice(valueDouble);
-                                    setMinMaxPrice(product, valueDouble);
+                                    newProduct.setOldPrice(valueDouble);
+                                    newProduct.setStdPrice(valueDouble);
+                                    setMinMaxPrice(newProduct, valueDouble);
                                 }
 
                                 if (param.equals(shop.getSavePrice())) {
@@ -241,15 +265,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             e.printStackTrace();
         }
         statistics.setShopTitle(shop.getTitle());
-        statistics.setProductTitle(product.getTitle());
-        statistics.setProductId(product.getId());
+        statistics.setProductTitle(newProduct.getTitle());
+        statistics.setProductId(newProduct.getId());
         statistics.setDateTime(System.currentTimeMillis());
-//        statistics.setDateTime(System.currentTimeMillis());
-        //statisticss.add(statistics);
         statistics.print();
-        if (!StatisticsDAO.compare(context, statistics)) {
+        if (!Utility.compareProductsForStat(product, newProduct)) {
             StatisticsDAO.addStatistics(context, statistics);
-            ProductsDAO.updateProduct(context, product);
+            ProductsDAO.updateProduct(context, newProduct);
+        } else if (!Utility.compareProducts(product, newProduct)) {
+            ProductsDAO.updateProduct(context, newProduct);
         }
     }
 

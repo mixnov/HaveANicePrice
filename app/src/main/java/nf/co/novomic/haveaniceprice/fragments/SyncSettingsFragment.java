@@ -29,7 +29,7 @@ import nf.co.novomic.haveaniceprice.R;
 /**
  * @author Daniel Serdyukov
  */
-public class SyncSettings extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SyncSettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String KEY_AUTO_SYNC = "nf.co.novomic.haveaniceprice.KEY_AUTO_SYNC";
 

@@ -25,6 +25,9 @@ public class Statistics implements Parcelable {
     private double save_price;
 
     public Statistics() {
+        this.shopTitle = "";
+        this.productTitle = "";
+        this.special = "";
     }
 
     public Statistics(long _id, String shopTitle, String productTitle, long productId, long dateTime,
